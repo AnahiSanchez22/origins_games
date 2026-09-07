@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Si la petición busca un archivo o carpeta real en public/, no redirigir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirigir el resto al Front Controller
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

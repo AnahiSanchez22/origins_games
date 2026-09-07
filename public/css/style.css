@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+:root {
+    --bg-galaxy: radial-gradient(circle at center, #1b1335 0%, #080214 100%);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --gold-star: #ffea00;
+    --star-glow: #ffd700;
+    --cyan-glow: #00f0ff;
+    --text-color: #ffffff;
+    --text-muted: #d0c8ec;
+}
+
+body {
+    font-family: 'Fredoka', cursive, sans-serif;
+    background: var(--bg-galaxy);
+    background-attachment: fixed;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Encabezado Espacial */
+.navbar {
+    background: rgba(15, 8, 38, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--cyan-glow);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold-star);
+    text-shadow: 0 0 10px var(--star-glow);
+    text-decoration: none;
+}
+
+.navbar .logo span {
+    color: var(--cyan-glow);
+}
+
+.navbar nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.navbar nav a:hover {
+    background: rgba(255, 234, 0, 0.2);
+    border-color: var(--gold-star);
+    color: var(--gold-star);
+    box-shadow: 0 0 10px var(--star-glow);
+}
+
+/* Badges de Admin */
+.badge-admin {
+    background: linear-gradient(135deg, #e60012, #990000);
+    color: #fff !important;
+    border-radius: 12px;
+}
+
+.btn-logout {
+    background: rgba(239, 68, 68, 0.3);
+    border: 1px solid #ef4444 !important;
+}
+
+/* Contenedor Principal */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header-actions h2 {
+    font-size: 2.2rem;
+    color: var(--gold-star);
+    text-shadow: 0 0 12px rgba(255, 234, 0, 0.6);
+}
+
+/* Tarjetas y Contenedores */
+.form-card, .grid-products > div {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-muted);
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(10, 5, 25, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: #fff;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--cyan-glow);
+    box-shadow: 0 0 10px var(--cyan-glow);
+}
+
+/* Botones con estilo Estela de Cometa */
+.btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ffea00, #ff9900);
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn-success { background: #10b981; color: white; }
+.btn-danger { background: #ef4444; color: white; }
+
+/* Tablas */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table th {
+    color: var(--cyan-glow);
+}
+
+/* Badges de Estado */
+.badge {
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-pendiente { 
+    background: rgba(245, 158, 11, 0.2); 
+    border: 1px solid #f59e0b; 
+    color: #fbbf24; 
+}
+.badge-confirmada { 
+    background: rgba(59, 130, 246, 0.2); 
+    border: 1px solid #3b82f6; 
+    color: #60a5fa; 
+}
+.badge-completada { 
+    background: rgba(16, 185, 129, 0.2); 
+    border: 1px solid #10b981; 
+    color: #34d399; 
+}
+.badge-cancelada { 
+    background: rgba(239, 68, 68, 0.2); 
+    border: 1px solid #ef4444; 
+    color: #f87171; 
+}
+
+/* Animación de destello suave para la Superestrella */
+@keyframes starPulse {
+    0% {
+        box-shadow: 0 0 10px var(--star-glow), inset 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px var(--star-glow), 0 0 35px var(--gold-star), inset 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px var(--star-glow), inset 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Animación de pulso cian para tarjetas y bordes */
+@keyframes cyanGlow {
+    0% {
+        border-color: rgba(0, 240, 255, 0.4);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+    50% {
+        border-color: rgba(0, 240, 255, 0.9);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+    }
+    100% {
+        border-color: rgba(0, 240, 255, 0.4);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+}
+
+/* Aplicación del resplandor a los botones principales */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    animation: starPulse 3s infinite ease-in-out;
+}
+
+.btn-primary:hover {
+    animation: starPulse 1s infinite ease-in-out;
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Efecto de destello al pasar el cursor sobre los botones */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        60deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transform: rotate(30deg) translateY(-100%);
+    transition: transform 0.6s ease;
+}
+
+.btn:hover::after {
+    transform: rotate(30deg) translateY(100%);
+}
+
+/* Resplandor intermitente en las tarjetas al pasar el ratón */
+.form-card:hover, .grid-products > div:hover {
+    animation: cyanGlow 2.5s infinite ease-in-out;
+    transition: transform 0.3s ease;
+    transform: translateY(-4px);
+}
+
+/* Brillo resplandeciente en los títulos principales */
+.header-actions h2, .navbar .logo {
+    transition: text-shadow 0.3s ease;
+}
+
+.header-actions h2:hover, .navbar .logo:hover {
+    text-shadow: 0 0 20px var(--gold-star), 0 0 30px var(--cyan-glow);
+}
