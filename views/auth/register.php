@@ -19,6 +19,11 @@
             <label>Correo Electrónico *:</label>
             <input type="email" name="correo" required placeholder="tu@email.com">
         </div>
+
+        <div class="form-group">
+            <label>Teléfono:</label>
+            <input type="text" name="telefono" placeholder="Ej: 3000000000">
+        </div>
         
         <div class="form-group">
             <label>Contraseña *:</label>

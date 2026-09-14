@@ -72,6 +72,32 @@ class Usuario {
         return $stmt->execute($params);
     }
 
+    // Actualizar perfil del propio usuario (Sin cambiar rol)
+    public function updateProfile($id, $data) {
+        if (!empty($data['password'])) {
+            $sql = "UPDATE usuarios SET nombre = :nombre, email = :email, password = :password, telefono = :telefono, direccion = :direccion WHERE id = :id";
+            $params = [
+                ':nombre'    => $data['nombre'],
+                ':email'     => $data['email'],
+                ':password'  => password_hash($data['password'], PASSWORD_BCRYPT),
+                ':telefono'  => $data['telefono'],
+                ':direccion' => $data['direccion'],
+                ':id'        => $id
+            ];
+        } else {
+            $sql = "UPDATE usuarios SET nombre = :nombre, email = :email, telefono = :telefono, direccion = :direccion WHERE id = :id";
+            $params = [
+                ':nombre'    => $data['nombre'],
+                ':email'     => $data['email'],
+                ':telefono'  => $data['telefono'],
+                ':direccion' => $data['direccion'],
+                ':id'        => $id
+            ];
+        }
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
     // Eliminar usuario
     public function delete($id) {
         $stmt = $this->db->prepare("DELETE FROM usuarios WHERE id = :id");

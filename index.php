@@ -1,17 +1,13 @@
 <?php
-// 1. Asegurar que la sesión esté iniciada para todo el proyecto
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 2. Obtener la URL solicitada y limpiarla quitando la carpeta base
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $url = str_replace('/origins_games', '', $url);
 
-// 3. Incluir el controlador del carrito por defecto (o puedes requerirlos bajo demanda)
 require_once __DIR__ . '/controllers/CarritoController.php';
 
-// 4. Estructura SWITCH unificada y ordenada
 switch ($url) {
     case '':
     case '/':
@@ -33,6 +29,41 @@ switch ($url) {
     case '/auth/logout':
         require_once 'controllers/AuthController.php';
         (new AuthController())->logout();
+        break;
+
+    // --- Rutas de Perfil de Usuario (Cliente / Admin) ---
+    case '/perfil':
+        require_once 'controllers/PerfilController.php';
+        (new PerfilController())->index();
+        break;
+
+    case '/perfil/editar':
+        require_once 'controllers/PerfilController.php';
+        (new PerfilController())->editar();
+        break;
+
+    // --- Rutas de Gestión de Usuarios (Admin) ---
+    case '/usuario':
+    case '/usuario/index':
+        require_once 'controllers/UsuarioController.php';
+        (new UsuarioController())->index();
+        break;
+
+    case '/usuario/create':
+        require_once 'controllers/UsuarioController.php';
+        (new UsuarioController())->create();
+        break;
+
+    case '/usuario/edit':
+        require_once 'controllers/UsuarioController.php';
+        $id = $_GET['id'] ?? null;
+        (new UsuarioController())->edit($id);
+        break;
+
+    case '/usuario/delete':
+        require_once 'controllers/UsuarioController.php';
+        $id = $_GET['id'] ?? null;
+        (new UsuarioController())->delete($id);
         break;
 
     // --- Rutas de Productos ---

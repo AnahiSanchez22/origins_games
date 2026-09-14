@@ -62,13 +62,6 @@ body {
     box-shadow: 0 0 10px var(--star-glow);
 }
 
-/* Badges de Admin */
-.badge-admin {
-    background: linear-gradient(135deg, #e60012, #990000);
-    color: #fff !important;
-    border-radius: 12px;
-}
-
 .btn-logout {
     background: rgba(239, 68, 68, 0.3);
     border: 1px solid #ef4444 !important;
@@ -81,10 +74,18 @@ body {
     padding: 0 20px;
 }
 
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
 .header-actions h2 {
     font-size: 2.2rem;
     color: var(--gold-star);
     text-shadow: 0 0 12px rgba(255, 234, 0, 0.6);
+    margin: 0;
 }
 
 /* Tarjetas y Contenedores */
@@ -129,16 +130,21 @@ body {
     box-shadow: 0 0 10px var(--cyan-glow);
 }
 
-/* Botones con estilo Estela de Cometa */
+/* Botones con estilo Estela de Cometa (Base) */
 .btn {
+    position: relative;
     padding: 10px 20px;
     border-radius: 25px;
     border: none;
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    display: inline-block !important;
+    width: auto !important;
+    max-width: max-content !important;
     transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    text-align: center;
 }
 
 .btn:hover {
@@ -149,40 +155,114 @@ body {
     background: linear-gradient(135deg, #ffea00, #ff9900);
     color: #000;
     box-shadow: 0 0 15px rgba(255, 234, 0, 0.5);
+    animation: starPulse 3s infinite ease-in-out;
 }
 
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+.btn-primary:hover {
+    animation: starPulse 1s infinite ease-in-out;
+    transform: translateY(-3px) scale(1.05);
 }
 
 .btn-success { background: #10b981; color: white; }
-.btn-danger { background: #ef4444; color: white; }
+.btn-success:hover { background: #059669; }
 
-/* Tablas */
+/* Botones Pequeños en Tablas (Editar / Eliminar) */
+.btn-sm {
+    padding: 6px 14px !important;
+    font-size: 0.85rem !important;
+    border-radius: 15px !important;
+    margin-right: 4px;
+}
+
+.btn-warning {
+    background: #f59e0b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn-warning:hover {
+    background: #d97706 !important;
+    box-shadow: 0 0 10px #f59e0b;
+}
+
+.btn-danger {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.btn-danger:hover {
+    background: #dc2626 !important;
+    box-shadow: 0 0 10px #ef4444;
+}
+
+/* Botón Cancelar (Secundario / Cristal) */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: var(--text-muted) !important;
+    border: 1px solid var(--card-border) !important;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+.btn-secondary:hover {
+    background: rgba(239, 68, 68, 0.2) !important;
+    color: #f87171 !important;
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+/* Tablas Limpias Estilo Galaxia */
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .table th, .table td {
-    padding: 12px 15px;
+    padding: 15px 18px;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .table th {
     color: var(--cyan-glow);
+    background: rgba(15, 8, 38, 0.6);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* Badges de Estado */
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges de Roles y Estados */
 .badge {
     padding: 6px 14px;
     border-radius: 15px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: bold;
     display: inline-block;
+    text-align: center;
+}
+
+.badge-admin {
+    background: linear-gradient(135deg, #e60012, #990000);
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 8px rgba(230, 0, 18, 0.4);
+}
+
+.badge-client {
+    background: rgba(0, 240, 255, 0.15);
+    color: var(--cyan-glow) !important;
+    border: 1px solid rgba(0, 240, 255, 0.3);
 }
 
 .badge-pendiente { 
@@ -206,7 +286,7 @@ body {
     color: #f87171; 
 }
 
-/* Animación de destello suave para la Superestrella */
+/* Animaciones */
 @keyframes starPulse {
     0% {
         box-shadow: 0 0 10px var(--star-glow), inset 0 0 5px rgba(255, 255, 255, 0.5);
@@ -219,7 +299,6 @@ body {
     }
 }
 
-/* Animación de pulso cian para tarjetas y bordes */
 @keyframes cyanGlow {
     0% {
         border-color: rgba(0, 240, 255, 0.4);
@@ -235,19 +314,7 @@ body {
     }
 }
 
-/* Aplicación del resplandor a los botones principales */
-.btn-primary {
-    position: relative;
-    overflow: hidden;
-    animation: starPulse 3s infinite ease-in-out;
-}
-
-.btn-primary:hover {
-    animation: starPulse 1s infinite ease-in-out;
-    transform: translateY(-3px) scale(1.05);
-}
-
-/* Efecto de destello al pasar el cursor sobre los botones */
+/* Efecto de destello en botones */
 .btn::after {
     content: '';
     position: absolute;
@@ -269,16 +336,9 @@ body {
     transform: rotate(30deg) translateY(100%);
 }
 
-/* Resplandor intermitente en las tarjetas al pasar el ratón */
 .form-card:hover, .grid-products > div:hover {
     animation: cyanGlow 2.5s infinite ease-in-out;
     transition: transform 0.3s ease;
-    transform: translateY(-4px);
-}
-
-/* Brillo resplandeciente en los títulos principales */
-.header-actions h2, .navbar .logo {
-    transition: text-shadow 0.3s ease;
 }
 
 .header-actions h2:hover, .navbar .logo:hover {
