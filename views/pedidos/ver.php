@@ -1,4 +1,9 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<?php
+/*
+ * La cabecera y el pie de página
+ * ya son cargados por PedidoController.
+ */
+?>
 
 <style>
     .pedido-detalle-header {
@@ -26,6 +31,11 @@
         border-radius: 12px;
         font-size: .8rem;
         font-weight: 700;
+        text-decoration: none;
+    }
+
+    .btn-volver:hover {
+        background: rgba(0, 229, 255, .08);
     }
 
     .pedido-grid {
@@ -75,6 +85,8 @@
         color: #fff;
         text-align: right;
         font-size: .82rem;
+        max-width: 65%;
+        word-break: break-word;
     }
 
     .pedido-producto {
@@ -95,6 +107,7 @@
         object-fit: cover;
         border-radius: 10px;
         border: 1px solid var(--border-card);
+        background: #060d1e;
     }
 
     .producto-info {
@@ -183,13 +196,15 @@
         </h2>
 
         <p>
-            <?= htmlspecialchars($pedido['fecha_pedido']) ?>
+            <?= htmlspecialchars(
+                $pedido['fecha_pedido'] ?? ''
+            ) ?>
         </p>
 
     </div>
 
     <a
-        href="/origins_games/pedido/admin"
+        href="/origins_games/pedidos"
         class="btn-volver"
     >
         ← Volver a pedidos
@@ -215,29 +230,48 @@
 
                 <?php foreach ($detalles as $detalle): ?>
 
+                    <?php
+                    $nombreProducto =
+                        $detalle['producto']
+                        ?? 'Producto';
+
+                    $imagen =
+                        $detalle['imagen']
+                        ?? 'default.jpg';
+
+                    $cantidad =
+                        (int) ($detalle['cantidad'] ?? 0);
+
+                    $precio =
+                        (float) ($detalle['precio_unitario'] ?? 0);
+
+                    $subtotal =
+                        $precio * $cantidad;
+                    ?>
+
+
                     <div class="pedido-producto">
 
                         <img
-                            src="/origins_games/public/uploads/<?= htmlspecialchars($detalle['imagen'] ?? 'default.jpg') ?>"
+                            src="/origins_games/public/uploads/<?= htmlspecialchars($imagen) ?>"
                             onerror="this.onerror=null; this.src='/origins_games/public/uploads/default.jpg';"
                             alt="Producto"
                         >
 
+
                         <div class="producto-info">
 
                             <strong>
-                                <?= htmlspecialchars(
-                                    $detalle['producto_nombre']
-                                ) ?>
+                                <?= htmlspecialchars($nombreProducto) ?>
                             </strong>
 
                             <span>
                                 Cantidad:
-                                <?= (int) $detalle['cantidad'] ?>
+                                <?= $cantidad ?>
                                 ×
                                 $
                                 <?= number_format(
-                                    (float) $detalle['precio_unitario'],
+                                    $precio,
                                     0,
                                     ',',
                                     '.'
@@ -246,12 +280,12 @@
 
                         </div>
 
+
                         <div class="producto-subtotal">
 
                             $
                             <?= number_format(
-                                (float) $detalle['precio_unitario'] *
-                                (int) $detalle['cantidad'],
+                                $subtotal,
                                 0,
                                 ',',
                                 '.'
@@ -282,7 +316,7 @@
 
                     $
                     <?= number_format(
-                        (float) $pedido['total'],
+                        (float) ($pedido['total'] ?? 0),
                         0,
                         ',',
                         '.'
@@ -307,6 +341,7 @@
                 Información del cliente
             </h3>
 
+
             <div class="pedido-info">
 
                 <div class="pedido-info-row">
@@ -316,7 +351,9 @@
                     </span>
 
                     <strong>
-                        <?= htmlspecialchars($pedido['cliente']) ?>
+                        <?= htmlspecialchars(
+                            $pedido['cliente'] ?? 'No registrado'
+                        ) ?>
                     </strong>
 
                 </div>
@@ -329,7 +366,9 @@
                     </span>
 
                     <strong>
-                        <?= htmlspecialchars($pedido['email']) ?>
+                        <?= htmlspecialchars(
+                            $pedido['email'] ?? 'No registrado'
+                        ) ?>
                     </strong>
 
                 </div>
@@ -343,7 +382,7 @@
 
                     <strong>
                         <?= htmlspecialchars(
-                            $pedido['telefono'] ?: 'No registrado'
+                            $pedido['telefono'] ?? 'No registrado'
                         ) ?>
                     </strong>
 
@@ -358,7 +397,7 @@
 
                     <strong>
                         <?= htmlspecialchars(
-                            $pedido['direccion'] ?: 'No registrada'
+                            $pedido['direccion'] ?? 'No registrada'
                         ) ?>
                     </strong>
 
@@ -377,6 +416,7 @@
                 Estado del pedido
             </h3>
 
+
             <div class="estado-form">
 
                 <form
@@ -386,45 +426,59 @@
 
                     <input
                         type="hidden"
-                        name="id"
+                        name="pedido_id"
                         value="<?= (int) $pedido['id'] ?>"
                     >
+
 
                     <label>
                         Estado actual
                     </label>
 
+
                     <select name="estado">
 
                         <option
                             value="pendiente"
-                            <?= $pedido['estado'] === 'pendiente' ? 'selected' : '' ?>
+                            <?= ($pedido['estado'] ?? '') === 'pendiente'
+                                ? 'selected'
+                                : '' ?>
                         >
                             Pendiente
                         </option>
 
+
                         <option
                             value="pagado"
-                            <?= $pedido['estado'] === 'pagado' ? 'selected' : '' ?>
+                            <?= ($pedido['estado'] ?? '') === 'pagado'
+                                ? 'selected'
+                                : '' ?>
                         >
                             Pagado
                         </option>
 
+
                         <option
                             value="enviado"
-                            <?= $pedido['estado'] === 'enviado' ? 'selected' : '' ?>
+                            <?= ($pedido['estado'] ?? '') === 'enviado'
+                                ? 'selected'
+                                : '' ?>
                         >
                             Enviado
                         </option>
 
+
                         <option
                             value="cancelado"
-                            <?= $pedido['estado'] === 'cancelado' ? 'selected' : '' ?>
+                            <?= ($pedido['estado'] ?? '') === 'cancelado'
+                                ? 'selected'
+                                : '' ?>
                         >
                             Cancelado
                         </option>
 
                     </select>
+
 
                     <button
                         type="submit"
@@ -442,6 +496,3 @@
     </div>
 
 </div>
-
-
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
