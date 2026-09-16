@@ -139,6 +139,17 @@ switch ($url) {
         (new CarritoController())->pagar();
         break;
 
+        // --- Rutas de Mis Pedidos ---
+case '/mis-pedidos':
+    require_once 'controllers/PedidoController.php';
+    (new PedidoController())->misPedidos();
+    break;
+
+case '/mis-pedidos/detalle':
+    require_once 'controllers/PedidoController.php';
+    (new PedidoController())->detalle();
+    break;
+
             // --- Dashboard de Administrador ---
     case '/dashboard':
         require_once 'controllers/DashboardController.php';
@@ -149,6 +160,27 @@ switch ($url) {
     case '/pedido/admin':
         require_once 'controllers/PedidoController.php';
         (new PedidoController())->admin();
+        break;
+    // --- Dashboard ---
+    case '/dashboard':
+        require_once 'controllers/DashboardController.php';
+        (new DashboardController())->index();
+        break;
+
+    // --- Gestión de Pedidos ---
+    case '/pedido/admin':
+        require_once 'controllers/PedidoController.php';
+        (new PedidoController())->admin();
+        break;
+
+    case '/pedido/ver':
+        require_once 'controllers/PedidoController.php';
+        (new PedidoController())->ver();
+        break;
+
+    case '/pedido/cambiarEstado':
+        require_once 'controllers/PedidoController.php';
+        (new PedidoController())->cambiarEstado();
         break;
 
 

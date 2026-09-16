@@ -349,12 +349,33 @@ if (isset($_SESSION['carrito']) && is_array($_SESSION['carrito'])) {
             <a href="/origins_games/producto">Catálogo</a>
             <a href="/origins_games/cita">Soporte Técnico</a>
             <a href="/origins_games/carrito">Carrito (<?= $cant_carrito ?>)</a>
+            <?php if (AuthMiddleware::isLogged()): ?>
 
-            <?php if (AuthMiddleware::isAdmin()): ?>
-                <a href="/origins_games/cita/admin" class="badge-admin">Gestión Citas</a>
-                <a href="/origins_games/producto/admin" class="badge-admin">Inventario</a>
-                <a href="/origins_games/usuario" class="badge-admin">Usuarios</a>
-            <?php endif; ?>
+    <a href="/origins_games/mis-pedidos">
+        Mis Pedidos
+    </a>
+
+<?php endif; ?>
+
+<?php if (AuthMiddleware::isAdmin()): ?>
+
+    <a href="/origins_games/dashboard" class="badge-admin">
+        Dashboard
+    </a>
+
+    <a href="/origins_games/cita/admin" class="badge-admin">
+        Gestión Citas
+    </a>
+
+    <a href="/origins_games/producto/admin" class="badge-admin">
+        Inventario
+    </a>
+
+    <a href="/origins_games/usuario" class="badge-admin">
+        Usuarios
+    </a>
+
+ <?php endif; ?>
         </nav>
 
         <div class="auth-buttons">
