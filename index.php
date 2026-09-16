@@ -139,6 +139,19 @@ switch ($url) {
         (new CarritoController())->pagar();
         break;
 
+            // --- Dashboard de Administrador ---
+    case '/dashboard':
+        require_once 'controllers/DashboardController.php';
+        (new DashboardController())->index();
+        break;
+
+    // --- Gestión de Pedidos ---
+    case '/pedido/admin':
+        require_once 'controllers/PedidoController.php';
+        (new PedidoController())->admin();
+        break;
+
+
     // --- Default (Error 404) SIEMPRE al final ---
     default:
         http_response_code(404);

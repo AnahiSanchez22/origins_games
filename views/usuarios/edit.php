@@ -1,48 +1,265 @@
-<div class="form-card">
-    <h2>Editar Usuario (#<?= $usuario['id'] ?>)</h2>
+<div class="container">
 
-    <?php if (!empty($error)): ?>
-        <p class="alert alert-danger"><?= $error ?></p>
-    <?php endif; ?>
+    <div class="form-card" style="max-width: 600px; margin: 40px auto;">
 
-    <form action="/origins_games/usuario/edit/<?= $usuario['id'] ?>" method="POST">
-        <div class="form-group">
-            <label>Nombre Completo *:</label>
-            <input type="text" name="nombre" value="<?= htmlspecialchars($usuario['nombre']) ?>" required>
-        </div>
+        <h2 style="
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(250, 204, 21, 0.6);
+            margin-bottom: 24px;
+        ">
+            Editar Usuario
+        </h2>
 
-        <div class="form-group">
-            <label>Correo Electrónico *:</label>
-            <input type="email" name="email" value="<?= htmlspecialchars($usuario['email']) ?>" required>
-        </div>
 
-        <div class="form-group">
-            <label>Contraseña (dejar en blanco para mantener la actual):</label>
-            <input type="password" name="password">
-        </div>
+        <?php if (!empty($error)): ?>
 
-        <div class="form-group">
-            <label>Rol *:</label>
-            <select name="rol_id" required>
-                <?php foreach ($roles as $r): ?>
-                    <option value="<?= $r['id'] ?>" <?= $r['id'] == $usuario['rol_id'] ? 'selected' : '' ?>>
-                        <?= $r['nombre'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+            <p class="alert alert-danger" style="
+                background: rgba(239, 68, 68, 0.15);
+                border: 1px solid rgba(239, 68, 68, 0.5);
+                padding: 10px 14px;
+                border-radius: 10px;
+                color: #f87171;
+                margin-bottom: 20px;
+            ">
+                <?= htmlspecialchars($error) ?>
+            </p>
 
-        <div class="form-group">
-            <label>Teléfono:</label>
-            <input type="text" name="telefono" value="<?= htmlspecialchars($usuario['telefono'] ?? '') ?>">
-        </div>
+        <?php endif; ?>
 
-        <div class="form-group">
-            <label>Dirección:</label>
-            <textarea name="direccion"><?= htmlspecialchars($usuario['direccion'] ?? '') ?></textarea>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Actualizar</button>
-        <a href="/origins_games/usuario" class="btn btn-secondary">Cancelar</a>
-    </form>
+        <form
+            action="/origins_games/usuario/edit?id=<?= urlencode($usuario['id']) ?>"
+            method="POST"
+        >
+
+            <!-- =================================================
+                 NOMBRE
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="nombre">
+                    Nombre Completo *:
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    value="<?= htmlspecialchars($usuario['nombre']) ?>"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 EMAIL
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Correo Electrónico *:
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="<?= htmlspecialchars($usuario['email']) ?>"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTRASEÑA
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Contraseña:
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                >
+
+                <small style="
+                    display: block;
+                    margin-top: 7px;
+                    color: #94a3b8;
+                    font-size: 0.78rem;
+                ">
+                    Déjala vacía si no deseas cambiar la contraseña.
+                </small>
+
+            </div>
+
+
+            <!-- =================================================
+                 ROL
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="rol_id">
+                    Rol *:
+                </label>
+
+                <select
+                    id="rol_id"
+                    name="rol_id"
+                    required
+                >
+
+                    <?php foreach ($roles as $r): ?>
+
+                        <option
+                            value="<?= htmlspecialchars($r['id']) ?>"
+                            <?= $r['id'] == $usuario['rol_id'] ? 'selected' : '' ?>
+                        >
+                            <?= htmlspecialchars($r['nombre']) ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 TELÉFONO
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="telefono">
+                    Teléfono:
+                </label>
+
+                <input
+                    type="text"
+                    id="telefono"
+                    name="telefono"
+                    value="<?= htmlspecialchars($usuario['telefono'] ?? '') ?>"
+                >
+
+            </div>
+
+
+            <!-- =================================================
+                 DIRECCIÓN
+                 ================================================= -->
+
+            <div class="form-group">
+
+                <label for="direccion">
+                    Dirección:
+                </label>
+
+                <textarea
+                    id="direccion"
+                    name="direccion"
+                    rows="3"
+                ><?= htmlspecialchars($usuario['direccion'] ?? '') ?></textarea>
+
+            </div>
+
+
+            <!-- =================================================
+                 BOTONES
+                 ================================================= -->
+
+            <div style="
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                margin-top: 26px;
+                width: 100%;
+            ">
+
+                <!-- ACTUALIZAR -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    style="
+                        width: auto !important;
+                        flex: 1;
+                        min-height: 46px;
+                        margin: 0;
+                    "
+                >
+                    Actualizar Usuario
+                </button>
+
+
+                <!-- CANCELAR -->
+
+                <a
+                    href="/origins_games/usuario"
+                    class="btn"
+                    style="
+                        width: auto !important;
+                        min-width: 120px;
+                        min-height: 46px;
+
+                        display: inline-flex !important;
+                        align-items: center;
+                        justify-content: center;
+
+                        padding: 12px 22px;
+
+                        background: rgba(239, 68, 68, 0.08);
+
+                        color: #f87171 !important;
+
+                        border: 1px solid rgba(239, 68, 68, 0.45);
+
+                        border-radius: 20px;
+
+                        font-size: 0.95rem;
+                        font-weight: 700;
+
+                        text-decoration: none !important;
+
+                        box-shadow:
+                            0 0 8px rgba(239, 68, 68, 0.08);
+
+                        transition: all 0.2s ease;
+                    "
+
+                    onmouseover="
+                        this.style.background='rgba(239, 68, 68, 0.18)';
+                        this.style.borderColor='#ef4444';
+                        this.style.color='#ffffff';
+                        this.style.boxShadow='0 0 15px rgba(239, 68, 68, 0.25)';
+                        this.style.transform='translateY(-2px)';
+                    "
+
+                    onmouseout="
+                        this.style.background='rgba(239, 68, 68, 0.08)';
+                        this.style.borderColor='rgba(239, 68, 68, 0.45)';
+                        this.style.color='#f87171';
+                        this.style.boxShadow='0 0 8px rgba(239, 68, 68, 0.08)';
+                        this.style.transform='translateY(0)';
+                    "
+                >
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
