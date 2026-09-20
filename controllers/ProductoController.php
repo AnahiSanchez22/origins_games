@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/AuthMiddleware.php';
+require_once __DIR__ . '/../models/Favorito.php';
 
 class ProductoController
 {
@@ -19,31 +20,133 @@ class ProductoController
     // Catálogo público
     public function index()
     {
+        // Categoría seleccionada
         $cat = $_GET['categoria'] ?? 'todos';
 
-        if ($cat === 'todos') {
+        // Búsqueda por nombre
+        $busqueda = trim($_GET['busqueda'] ?? '');
 
-            $stmt = $this->db->query(
-                "SELECT * FROM productos
-                 ORDER BY id DESC"
-            );
+        // Ordenamiento
+        $orden = $_GET['orden'] ?? 'recientes';
 
-        } else {
+        /*
+         * Validamos la categoría para evitar valores
+         * diferentes a los que maneja actualmente
+         * el proyecto.
+         */
+        $categoriasValidas = [
+            'todos',
+            'accesorios',
+            'consolas',
+            'juegos'
+        ];
 
-            $stmt = $this->db->prepare(
-                "SELECT * FROM productos
-                 WHERE categoria_id = ?
-                 ORDER BY id DESC"
-            );
-
-            $catId = ($cat === 'accesorios')
-                ? 1
-                : (($cat === 'consolas') ? 2 : 3);
-
-            $stmt->execute([$catId]);
+        if (!in_array($cat, $categoriasValidas, true)) {
+            $cat = 'todos';
         }
 
+        /*
+         * Convertimos la categoría en su ID actual.
+         *
+         * accesorios = 1
+         * consolas   = 2
+         * juegos     = 3
+         */
+        $catId = null;
+
+        if ($cat === 'accesorios') {
+            $catId = 1;
+        } elseif ($cat === 'consolas') {
+            $catId = 2;
+        } elseif ($cat === 'juegos') {
+            $catId = 3;
+        }
+
+        /*
+         * Ordenamientos permitidos.
+         * Solo usamos valores definidos aquí
+         * para evitar introducir SQL directamente
+         * desde $_GET.
+         */
+        $ordenesPermitidos = [
+            'recientes' => 'id DESC',
+            'precio_asc' => 'precio ASC',
+            'precio_desc' => 'precio DESC',
+            'nombre_asc' => 'nombre ASC',
+            'nombre_desc' => 'nombre DESC'
+        ];
+
+        if (!isset($ordenesPermitidos[$orden])) {
+            $orden = 'recientes';
+        }
+
+        $orderBy = $ordenesPermitidos[$orden];
+
+        /*
+         * Construimos la consulta utilizando
+         * parámetros preparados.
+         */
+        $sql = "SELECT *
+                FROM productos
+                WHERE 1 = 1";
+
+        $parametros = [];
+
+        // Filtro por categoría
+        if ($catId !== null) {
+            $sql .= " AND categoria_id = ?";
+            $parametros[] = $catId;
+        }
+
+        // Búsqueda por nombre
+        if ($busqueda !== '') {
+            $sql .= " AND nombre LIKE ?";
+            $parametros[] = '%' . $busqueda . '%';
+        }
+
+        // Ordenamiento
+        $sql .= " ORDER BY " . $orderBy;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($parametros);
+
         $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        /*
+         * =====================================================
+         * FAVORITOS DEL USUARIO
+         * =====================================================
+         *
+         * Si el usuario está conectado, obtenemos los IDs
+         * de los productos que tiene guardados.
+         *
+         * Si no está conectado, simplemente dejamos el arreglo
+         * vacío para que el catálogo siga siendo público.
+         */
+
+        $favoritosIds = [];
+
+        if (isset($_SESSION['usuario']['id'])) {
+
+            $usuario_id = (int) $_SESSION['usuario']['id'];
+
+            $favoritoModel = new Favorito();
+
+            $favoritos = $favoritoModel->obtenerPorUsuario(
+                $usuario_id
+            );
+
+            foreach ($favoritos as $favorito) {
+
+                if (isset($favorito['id'])) {
+
+                    $favoritosIds[] =
+                        (int) $favorito['id'];
+                }
+            }
+        }
+
 
         require_once __DIR__ . '/../views/productos/index.php';
     }

@@ -20,6 +20,205 @@
         color: #f87171;
     }
 
+    /* BOTÓN DE FAVORITOS */
+
+    .favorite-form {
+        margin: 0 0 10px;
+    }
+
+    .favorite-button {
+        width: 46px;
+        height: 46px;
+
+        padding: 0;
+
+        border-radius: 50%;
+
+        font-size: 1.7rem;
+        line-height: 1;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        cursor: pointer;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        transition:
+            transform .2s ease,
+            background .2s ease,
+            border-color .2s ease,
+            box-shadow .2s ease,
+            color .2s ease;
+    }
+
+    .favorite-button-add {
+        border: 1px solid var(--yellow-accent);
+
+        background: transparent;
+
+        color: var(--yellow-accent);
+    }
+
+    .favorite-button-add:hover {
+        background: rgba(250, 204, 21, .10);
+
+        color: var(--yellow-hover);
+
+        border-color: var(--yellow-hover);
+
+        box-shadow:
+            0 0 14px rgba(250, 204, 21, .25);
+
+        transform: scale(1.08);
+    }
+
+    .favorite-button-remove {
+        border: 1px solid #f43f5e;
+
+        background: rgba(244, 63, 94, .10);
+
+        color: #f43f5e;
+    }
+
+    .favorite-button-remove:hover {
+        background: rgba(244, 63, 94, .18);
+
+        color: #fb7185;
+
+        border-color: #fb7185;
+
+        box-shadow:
+            0 0 14px rgba(244, 63, 94, .25);
+
+        transform: scale(1.08);
+    }
+
+    /* FILTROS DEL CATÁLOGO */
+
+    .catalog-filters {
+        max-width: 850px;
+        margin: 0 auto 25px;
+    }
+
+    .catalog-search {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .catalog-search input {
+        width: 100%;
+        max-width: 560px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-card);
+        color: var(--text-primary);
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: .9rem;
+        outline: none;
+    }
+
+    .catalog-search input::placeholder {
+        color: var(--text-secondary);
+    }
+
+    .catalog-search input:focus {
+        border-color: var(--cyan-accent);
+    }
+
+    .catalog-search button {
+        border: 1px solid var(--cyan-accent);
+        background: transparent;
+        color: var(--cyan-accent);
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-size: .9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .2s ease;
+        white-space: nowrap;
+    }
+
+    .catalog-search button:hover {
+        background: var(--cyan-accent);
+        color: #06111c;
+    }
+
+    .catalog-order-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .catalog-order-label {
+        color: var(--text-secondary);
+        font-size: .85rem;
+    }
+
+    .catalog-order {
+        background: transparent;
+        border: 1px solid var(--border-card);
+        color: var(--text-primary);
+        border-radius: 9px;
+        padding: 9px 12px;
+        font-size: .85rem;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .catalog-order:focus {
+        border-color: var(--yellow-accent);
+    }
+
+    .catalog-order option {
+        background: var(--bg-card);
+        color: var(--text-primary);
+    }
+
+    .catalog-results {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: .85rem;
+        margin-bottom: 22px;
+    }
+
+    /* CATEGORÍAS */
+
+    .catalog-categories {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+
+        .catalog-search {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .catalog-search input {
+            max-width: none;
+        }
+
+        .catalog-search button {
+            width: 100%;
+        }
+
+        .catalog-order-wrapper {
+            flex-direction: column;
+        }
+
+    }
+
 </style>
 
 
@@ -31,22 +230,134 @@
         margin-bottom: 20px;
     "
 >
-    Catálogo Gamer
+    Catálogo
 </h2>
 
 
-<div
-    style="
-        display:flex;
-        gap:12px;
-        justify-content:center;
-        margin-bottom:30px;
-        flex-wrap:wrap;
-    "
->
+<!-- BUSCADOR -->
+
+<div class="catalog-filters">
+
+    <form
+        action="/origins_games/producto"
+        method="GET"
+        class="catalog-search"
+    >
+
+        <input
+            type="hidden"
+            name="categoria"
+            value="<?= htmlspecialchars($cat ?? 'todos') ?>"
+        >
+
+        <input
+            type="hidden"
+            name="orden"
+            value="<?= htmlspecialchars($orden ?? 'recientes') ?>"
+        >
+
+        <input
+            type="text"
+            name="busqueda"
+            value="<?= htmlspecialchars($busqueda ?? '') ?>"
+            placeholder="Buscar producto..."
+        >
+
+        <button type="submit">
+            Buscar
+        </button>
+
+    </form>
+
+
+    <!-- ORDENAMIENTO -->
+
+    <form
+        action="/origins_games/producto"
+        method="GET"
+        class="catalog-order-wrapper"
+    >
+
+        <input
+            type="hidden"
+            name="categoria"
+            value="<?= htmlspecialchars($cat ?? 'todos') ?>"
+        >
+
+        <input
+            type="hidden"
+            name="busqueda"
+            value="<?= htmlspecialchars($busqueda ?? '') ?>"
+        >
+
+        <label
+            for="orden"
+            class="catalog-order-label"
+        >
+            Ordenar por:
+        </label>
+
+        <select
+            name="orden"
+            id="orden"
+            class="catalog-order"
+            onchange="this.form.submit()"
+        >
+
+            <option
+                value="recientes"
+                <?= ($orden ?? 'recientes') === 'recientes'
+                    ? 'selected'
+                    : '' ?>
+            >
+                Más recientes
+            </option>
+
+            <option
+                value="precio_asc"
+                <?= ($orden ?? '') === 'precio_asc'
+                    ? 'selected'
+                    : '' ?>
+            >
+                Precio: menor a mayor
+            </option>
+
+            <option
+                value="precio_desc"
+                <?= ($orden ?? '') === 'precio_desc'
+                    ? 'selected'
+                    : '' ?>
+            >
+                Precio: mayor a menor
+            </option>
+
+        </select>
+
+    </form>
+
+
+    <?php if (!empty($busqueda)): ?>
+
+        <div class="catalog-results">
+
+            Resultados para:
+            <strong>
+                <?= htmlspecialchars($busqueda) ?>
+            </strong>
+
+        </div>
+
+    <?php endif; ?>
+
+</div>
+
+
+<!-- FILTRO POR CATEGORÍA -->
+
+<div class="catalog-categories">
 
     <a
-        href="/origins_games/producto?categoria=todos"
+        href="/origins_games/producto?categoria=todos&busqueda=<?= urlencode($busqueda ?? '') ?>&orden=<?= urlencode($orden ?? 'recientes') ?>"
         class="<?= ($cat ?? 'todos') === 'todos'
             ? 'btn-nav-solid'
             : 'btn-nav-outline' ?>"
@@ -56,7 +367,7 @@
 
 
     <a
-        href="/origins_games/producto?categoria=accesorios"
+        href="/origins_games/producto?categoria=accesorios&busqueda=<?= urlencode($busqueda ?? '') ?>&orden=<?= urlencode($orden ?? 'recientes') ?>"
         class="<?= ($cat ?? '') === 'accesorios'
             ? 'btn-nav-solid'
             : 'btn-nav-outline' ?>"
@@ -66,7 +377,7 @@
 
 
     <a
-        href="/origins_games/producto?categoria=consolas"
+        href="/origins_games/producto?categoria=consolas&busqueda=<?= urlencode($busqueda ?? '') ?>&orden=<?= urlencode($orden ?? 'recientes') ?>"
         class="<?= ($cat ?? '') === 'consolas'
             ? 'btn-nav-solid'
             : 'btn-nav-outline' ?>"
@@ -76,7 +387,7 @@
 
 
     <a
-        href="/origins_games/producto?categoria=juegos"
+        href="/origins_games/producto?categoria=juegos&busqueda=<?= urlencode($busqueda ?? '') ?>&orden=<?= urlencode($orden ?? 'recientes') ?>"
         class="<?= ($cat ?? '') === 'juegos'
             ? 'btn-nav-solid'
             : 'btn-nav-outline' ?>"
@@ -86,6 +397,8 @@
 
 </div>
 
+
+<!-- PRODUCTOS -->
 
 <div
     class="grid-products"
@@ -103,21 +416,17 @@
 
             <?php
 
-            $stock =
-                (int)($p['stock'] ?? 0);
+            $stock = (int)($p['stock'] ?? 0);
 
             if ($stock <= 0) {
 
-                $stockClass =
-                    'stock-agotado';
+                $stockClass = 'stock-agotado';
 
-                $stockTexto =
-                    'Agotado';
+                $stockTexto = 'Agotado';
 
             } elseif ($stock <= 3) {
 
-                $stockClass =
-                    'stock-bajo';
+                $stockClass = 'stock-bajo';
 
                 $stockTexto =
                     'Últimas ' .
@@ -126,14 +435,22 @@
 
             } else {
 
-                $stockClass =
-                    'stock-disponible';
+                $stockClass = 'stock-disponible';
 
                 $stockTexto =
                     'Disponible · ' .
                     $stock .
                     ' unidades';
             }
+
+            /*
+             * Comprobamos si el producto está entre los favoritos
+             * del usuario actualmente conectado.
+             */
+            $productoId = (int)($p['id'] ?? 0);
+
+            $esFavorito = isset($favoritosIds)
+                && in_array($productoId, $favoritosIds, true);
 
             ?>
 
@@ -163,7 +480,7 @@
                             this.src='/origins_games/public/uploads/default.jpg';
                         "
                         alt="<?= htmlspecialchars(
-                            $p['nombre']
+                            $p['nombre'] ?? ''
                         ) ?>"
                         style="
                             width:100%;
@@ -231,6 +548,44 @@
                     </div>
 
 
+                    <!-- FAVORITOS -->
+
+                    <?php if (isset($_SESSION['usuario']['id'])): ?>
+
+                        <form
+                            action="/origins_games/favoritos/<?= $esFavorito ? 'eliminar' : 'agregar' ?>"
+                            method="POST"
+                            class="favorite-form"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="producto_id"
+                                value="<?= $productoId ?>"
+                            >
+
+                            <button
+                                type="submit"
+                                class="favorite-button <?= $esFavorito
+                                    ? 'favorite-button-remove'
+                                    : 'favorite-button-add' ?>"
+                                title="<?= $esFavorito
+                                    ? 'Quitar de favoritos'
+                                    : 'Agregar a favoritos' ?>"
+                                aria-label="<?= $esFavorito
+                                    ? 'Quitar de favoritos'
+                                    : 'Agregar a favoritos' ?>"
+                            >
+                                <?= $esFavorito ? '♥' : '♡' ?>
+                            </button>
+
+                        </form>
+
+                    <?php endif; ?>
+
+
+                    <!-- CARRITO -->
+
                     <?php if ($stock > 0): ?>
 
                         <form
@@ -242,8 +597,9 @@
                             <input
                                 type="hidden"
                                 name="producto_id"
-                                value="<?= (int)$p['id'] ?>"
+                                value="<?= $productoId ?>"
                             >
+
 
                             <button
                                 type="submit"
@@ -291,7 +647,7 @@
                 color:var(--text-secondary);
             "
         >
-            No se encontraron productos en esta categoría.
+            No se encontraron resultados de su busqueda.
         </p>
 
     <?php endif; ?>
@@ -300,4 +656,3 @@
 
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
-

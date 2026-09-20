@@ -1,8 +1,5 @@
 <?php
-/*
- * La cabecera y el pie de página
- * ya son cargados por PedidoController.
- */
+// Esta vista es cargada desde PedidoController.
 ?>
 
 <style>
@@ -108,10 +105,12 @@
         border-radius: 10px;
         border: 1px solid var(--border-card);
         background: #060d1e;
+        flex-shrink: 0;
     }
 
     .producto-info {
         flex: 1;
+        min-width: 0;
     }
 
     .producto-info strong {
@@ -129,6 +128,7 @@
         color: var(--cyan-accent);
         font-weight: 700;
         font-size: .85rem;
+        white-space: nowrap;
     }
 
     .pedido-total-final {
@@ -175,6 +175,7 @@
     }
 
     @media (max-width: 850px) {
+
         .pedido-grid {
             grid-template-columns: 1fr;
         }
@@ -192,7 +193,7 @@
     <div>
 
         <h2>
-            Pedido #<?= (int) $pedido['id'] ?>
+            Pedido #<?= (int) ($pedido['id'] ?? 0) ?>
         </h2>
 
         <p>
@@ -204,7 +205,7 @@
     </div>
 
     <a
-        href="/origins_games/pedidos"
+        href="/origins_games/pedido/admin"
         class="btn-volver"
     >
         ← Volver a pedidos
@@ -231,22 +232,23 @@
                 <?php foreach ($detalles as $detalle): ?>
 
                     <?php
-                    $nombreProducto =
-                        $detalle['producto']
-                        ?? 'Producto';
+                    $imagen = !empty($detalle['imagen'])
+                        ? $detalle['imagen']
+                        : 'default.jpg';
 
-                    $imagen =
-                        $detalle['imagen']
-                        ?? 'default.jpg';
+                    $nombreProducto = !empty($detalle['producto'])
+                        ? $detalle['producto']
+                        : 'Producto';
 
-                    $cantidad =
-                        (int) ($detalle['cantidad'] ?? 0);
+                    $cantidad = (int) (
+                        $detalle['cantidad'] ?? 0
+                    );
 
-                    $precio =
-                        (float) ($detalle['precio_unitario'] ?? 0);
+                    $precio = (float) (
+                        $detalle['precio_unitario'] ?? 0
+                    );
 
-                    $subtotal =
-                        $precio * $cantidad;
+                    $subtotal = $precio * $cantidad;
                     ?>
 
 
@@ -255,7 +257,7 @@
                         <img
                             src="/origins_games/public/uploads/<?= htmlspecialchars($imagen) ?>"
                             onerror="this.onerror=null; this.src='/origins_games/public/uploads/default.jpg';"
-                            alt="Producto"
+                            alt="<?= htmlspecialchars($nombreProducto) ?>"
                         >
 
 
@@ -313,7 +315,6 @@
                 </span>
 
                 <strong>
-
                     $
                     <?= number_format(
                         (float) ($pedido['total'] ?? 0),
@@ -321,7 +322,6 @@
                         ',',
                         '.'
                     ) ?>
-
                 </strong>
 
             </div>
@@ -331,7 +331,7 @@
     </div>
 
 
-    <!-- INFORMACIÓN -->
+    <!-- INFORMACIÓN DEL CLIENTE -->
 
     <div>
 
@@ -408,7 +408,7 @@
         </div>
 
 
-        <!-- ESTADO -->
+        <!-- ESTADO DEL PEDIDO -->
 
         <div class="pedido-panel">
 
@@ -427,7 +427,7 @@
                     <input
                         type="hidden"
                         name="pedido_id"
-                        value="<?= (int) $pedido['id'] ?>"
+                        value="<?= (int) ($pedido['id'] ?? 0) ?>"
                     >
 
 

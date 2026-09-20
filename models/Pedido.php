@@ -20,13 +20,18 @@ class Pedido
         $total
     ) {
         try {
+
             $this->db->beginTransaction();
 
             /*
              * Verificar stock antes de crear el pedido.
              */
             $stmtProducto = $this->db->prepare(
-                "SELECT id, nombre, precio, stock
+                "SELECT
+                    id,
+                    nombre,
+                    precio,
+                    stock
                  FROM productos
                  WHERE id = ?
                  FOR UPDATE"
@@ -72,7 +77,11 @@ class Pedido
              */
             $stmt = $this->db->prepare(
                 "INSERT INTO pedidos
-                (usuario_id, total, estado)
+                (
+                    usuario_id,
+                    total,
+                    estado
+                )
                 VALUES (?, ?, 'pagado')"
             );
 
@@ -163,6 +172,7 @@ class Pedido
         }
     }
 
+
     /**
      * Obtener todos los pedidos de un usuario.
      */
@@ -189,6 +199,7 @@ class Pedido
             PDO::FETCH_ASSOC
         );
     }
+
 
     /**
      * Obtener un pedido específico,
@@ -227,9 +238,12 @@ class Pedido
         );
     }
 
+
     /**
      * Obtener los productos que pertenecen
      * a un pedido.
+     *
+     * Incluye nombre e imagen del producto.
      */
     public function obtenerDetallesPedido($pedido_id)
     {
@@ -239,7 +253,8 @@ class Pedido
                 dp.producto_id,
                 dp.cantidad,
                 dp.precio_unitario,
-                pr.nombre AS producto
+                pr.nombre AS producto,
+                pr.imagen AS imagen
             FROM detalle_pedidos dp
             INNER JOIN productos pr
                 ON pr.id = dp.producto_id
@@ -258,10 +273,9 @@ class Pedido
         );
     }
 
+
     /**
      * Obtener todos los pedidos para administración.
-     *
-     * Incluye los datos básicos del cliente.
      */
     public function obtenerTodosLosPedidos()
     {
@@ -280,19 +294,16 @@ class Pedido
             ORDER BY p.fecha_pedido DESC, p.id DESC
         ";
 
-        $stmt = $this->db->prepare($sql);
-
-        $stmt->execute();
+        $stmt = $this->db->query($sql);
 
         return $stmt->fetchAll(
             PDO::FETCH_ASSOC
         );
     }
 
+
     /**
      * Obtener un pedido para administración.
-     *
-     * No limita el pedido a un usuario específico.
      */
     public function obtenerPedidoAdmin($pedido_id)
     {
@@ -304,7 +315,9 @@ class Pedido
                 p.estado,
                 p.fecha_pedido,
                 u.nombre AS cliente,
-                u.email
+                u.email,
+                u.telefono,
+                u.direccion
             FROM pedidos p
             INNER JOIN usuarios u
                 ON u.id = p.usuario_id
@@ -323,14 +336,14 @@ class Pedido
         );
     }
 
+
     /**
-     * Cambiar el estado de un pedido.
-     *
-     * Estados permitidos actualmente:
-     * pendiente, pagado, enviado, cancelado.
+     * Cambiar estado de un pedido.
      */
-    public function cambiarEstado($pedido_id, $estado)
-    {
+    public function cambiarEstado(
+        $pedido_id,
+        $estado
+    ) {
         $estadosPermitidos = [
             'pendiente',
             'pagado',
@@ -350,11 +363,9 @@ class Pedido
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute([
+        return $stmt->execute([
             ':estado' => $estado,
             ':pedido_id' => $pedido_id
         ]);
-
-        return $stmt->rowCount() > 0;
     }
 }

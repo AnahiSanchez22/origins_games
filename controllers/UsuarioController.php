@@ -253,7 +253,7 @@ class UsuarioController
         $pageTitle = "Editar Usuario - Admin";
 
         require_once "views/layouts/header.php";
-        require_once "views/usuarios/edit.php";
+        require_once "views/usuarios/editar.php";
         require_once "views/layouts/footer.php";
     }
 
