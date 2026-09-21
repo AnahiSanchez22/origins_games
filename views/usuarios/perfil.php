@@ -40,7 +40,7 @@
                     margin: 0;
                 "
             >
-                Información de tu cuenta en Origins Games
+                Información de tu cuenta
             </p>
 
         </div>
@@ -255,18 +255,48 @@
         >
 
             <a
-                href="/origins_games/home"
-                class="btn"
-                style="
-                    width: auto !important;
-                    min-width: 150px;
-                    text-align: center;
-                    text-decoration: none;
-                "
-            >
-                Volver al Inicio
-            </a>
+    href="/origins_games/home"
+    class="btn btn-volver"
+>
+    ← Volver al Inicio
+</a>
 
+<style>
+
+    .btn-volver {
+        width: auto !important;
+        min-width: 170px;
+        min-height: 46px;
+
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+
+        padding: 12px 20px;
+
+        background: rgba(34, 211, 238, .08) !important;
+        border: 1px solid rgba(34, 211, 238, .40) !important;
+
+        color: var(--cyan-accent) !important;
+
+        border-radius: 20px;
+
+        font-size: .95rem;
+        font-weight: 700;
+
+        text-decoration: none !important;
+
+        transition: all .2s ease;
+    }
+
+    .btn-volver:hover {
+        background: rgba(34, 211, 238, .16) !important;
+        border-color: var(--cyan-accent) !important;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+    }
+
+</style>
 
             <a
                 href="/origins_games/perfil/editar"

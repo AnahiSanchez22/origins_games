@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../config/AuthMiddleware.php';
+require_once __DIR__ . '/../config/Flash.php';
 require_once __DIR__ . '/../models/Favorito.php';
 
 class ProductoController
@@ -17,7 +18,11 @@ class ProductoController
         $this->db = Database::connect();
     }
 
-    // Catálogo público
+
+    // =========================================================
+    // CATÁLOGO PÚBLICO
+    // =========================================================
+
     public function index()
     {
         // Categoría seleccionada
@@ -29,11 +34,11 @@ class ProductoController
         // Ordenamiento
         $orden = $_GET['orden'] ?? 'recientes';
 
+
         /*
-         * Validamos la categoría para evitar valores
-         * diferentes a los que maneja actualmente
-         * el proyecto.
+         * Validamos la categoría
          */
+
         $categoriasValidas = [
             'todos',
             'accesorios',
@@ -45,13 +50,11 @@ class ProductoController
             $cat = 'todos';
         }
 
+
         /*
-         * Convertimos la categoría en su ID actual.
-         *
-         * accesorios = 1
-         * consolas   = 2
-         * juegos     = 3
+         * Convertimos la categoría en su ID
          */
+
         $catId = null;
 
         if ($cat === 'accesorios') {
@@ -62,12 +65,11 @@ class ProductoController
             $catId = 3;
         }
 
+
         /*
-         * Ordenamientos permitidos.
-         * Solo usamos valores definidos aquí
-         * para evitar introducir SQL directamente
-         * desde $_GET.
+         * Ordenamientos permitidos
          */
+
         $ordenesPermitidos = [
             'recientes' => 'id DESC',
             'precio_asc' => 'precio ASC',
@@ -82,15 +84,17 @@ class ProductoController
 
         $orderBy = $ordenesPermitidos[$orden];
 
+
         /*
-         * Construimos la consulta utilizando
-         * parámetros preparados.
+         * Consulta
          */
+
         $sql = "SELECT *
                 FROM productos
                 WHERE 1 = 1";
 
         $parametros = [];
+
 
         // Filtro por categoría
         if ($catId !== null) {
@@ -98,11 +102,13 @@ class ProductoController
             $parametros[] = $catId;
         }
 
+
         // Búsqueda por nombre
         if ($busqueda !== '') {
             $sql .= " AND nombre LIKE ?";
             $parametros[] = '%' . $busqueda . '%';
         }
+
 
         // Ordenamiento
         $sql .= " ORDER BY " . $orderBy;
@@ -117,12 +123,6 @@ class ProductoController
          * =====================================================
          * FAVORITOS DEL USUARIO
          * =====================================================
-         *
-         * Si el usuario está conectado, obtenemos los IDs
-         * de los productos que tiene guardados.
-         *
-         * Si no está conectado, simplemente dejamos el arreglo
-         * vacío para que el catálogo siga siendo público.
          */
 
         $favoritosIds = [];
@@ -152,7 +152,10 @@ class ProductoController
     }
 
 
-    // Inventario del administrador
+    // =========================================================
+    // INVENTARIO DEL ADMINISTRADOR
+    // =========================================================
+
     public function admin()
     {
         AuthMiddleware::requireAdmin();
@@ -169,15 +172,28 @@ class ProductoController
     }
 
 
-    // Crear / actualizar producto
+    // =========================================================
+    // CREAR / ACTUALIZAR PRODUCTO
+    // =========================================================
+
     public function guardar()
     {
         AuthMiddleware::requireAdmin();
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /origins_games/producto/admin');
+
+            Flash::set(
+                "Solicitud no válida.",
+                "error"
+            );
+
+            header(
+                'Location: /origins_games/producto/admin'
+            );
+
             exit();
         }
+
 
         try {
 
@@ -185,7 +201,9 @@ class ProductoController
                 ? (int) $_POST['id']
                 : null;
 
-            $nombre = trim($_POST['nombre'] ?? '');
+            $nombre = trim(
+                $_POST['nombre'] ?? ''
+            );
 
             $categoria_id = !empty($_POST['categoria_id'])
                 ? (int) $_POST['categoria_id']
@@ -204,21 +222,49 @@ class ProductoController
             );
 
 
-            // Validaciones
+            // =================================================
+            // VALIDACIONES
+            // =================================================
+
             if ($nombre === '') {
-                die('El nombre del producto es obligatorio.');
+
+                Flash::set(
+                    "El nombre del producto es obligatorio.",
+                    "error"
+                );
+
+                header(
+                    'Location: /origins_games/producto/admin'
+                );
+
+                exit();
             }
 
+
             if ($precio < 0) {
-                die('El precio no puede ser negativo.');
+
+                Flash::set(
+                    "El precio no puede ser negativo.",
+                    "error"
+                );
+
+                header(
+                    'Location: /origins_games/producto/admin'
+                );
+
+                exit();
             }
+
 
             if ($stock < 0) {
                 $stock = 0;
             }
 
 
-            // Imagen actual
+            // =================================================
+            // IMAGEN ACTUAL
+            // =================================================
+
             $imagenActual = 'default.jpg';
 
             if ($id) {
@@ -234,17 +280,22 @@ class ProductoController
                 $productoActual =
                     $stmtImg->fetch(PDO::FETCH_ASSOC);
 
+
                 if (
                     $productoActual &&
                     !empty($productoActual['imagen'])
                 ) {
+
                     $imagenActual =
                         $productoActual['imagen'];
                 }
             }
 
 
-            // Nueva imagen
+            // =================================================
+            // NUEVA IMAGEN
+            // =================================================
+
             if (
                 isset($_FILES['imagen']) &&
                 $_FILES['imagen']['error'] === UPLOAD_ERR_OK
@@ -257,6 +308,7 @@ class ProductoController
                     )
                 );
 
+
                 $extPermitidas = [
                     'jpg',
                     'jpeg',
@@ -265,6 +317,7 @@ class ProductoController
                     'webp',
                     'avif'
                 ];
+
 
                 if (in_array($ext, $extPermitidas, true)) {
 
@@ -275,11 +328,14 @@ class ProductoController
                         '.' .
                         $ext;
 
+
                     $dirSubida =
                         __DIR__ .
                         '/../public/uploads/';
 
+
                     if (!file_exists($dirSubida)) {
+
                         mkdir(
                             $dirSubida,
                             0777,
@@ -287,19 +343,37 @@ class ProductoController
                         );
                     }
 
+
                     if (
                         move_uploaded_file(
                             $_FILES['imagen']['tmp_name'],
                             $dirSubida . $nombreImg
                         )
                     ) {
+
                         $imagenActual = $nombreImg;
                     }
+
+                } else {
+
+                    Flash::set(
+                        "El formato de imagen no es válido.",
+                        "error"
+                    );
+
+                    header(
+                        'Location: /origins_games/producto/admin'
+                    );
+
+                    exit();
                 }
             }
 
 
-            // Actualizar
+            // =================================================
+            // ACTUALIZAR PRODUCTO
+            // =================================================
+
             if ($id) {
 
                 $stmt = $this->db->prepare(
@@ -314,6 +388,7 @@ class ProductoController
                      WHERE id = ?"
                 );
 
+
                 $stmt->execute([
                     $nombre,
                     $categoria_id,
@@ -324,9 +399,19 @@ class ProductoController
                     $id
                 ]);
 
+
+                Flash::set(
+                    "Producto actualizado correctamente.",
+                    "success"
+                );
+
             }
 
-            // Crear
+
+            // =================================================
+            // CREAR PRODUCTO
+            // =================================================
+
             else {
 
                 $stmt = $this->db->prepare(
@@ -342,6 +427,7 @@ class ProductoController
                     VALUES (?, ?, ?, ?, ?, ?)"
                 );
 
+
                 $stmt->execute([
                     $nombre,
                     $categoria_id,
@@ -350,8 +436,18 @@ class ProductoController
                     $descripcion,
                     $imagenActual
                 ]);
+
+
+                Flash::set(
+                    "Producto creado correctamente.",
+                    "success"
+                );
             }
 
+
+            // =================================================
+            // REGRESAR AL INVENTARIO
+            // =================================================
 
             header(
                 'Location: /origins_games/producto/admin'
@@ -359,26 +455,53 @@ class ProductoController
 
             exit();
 
+
         } catch (PDOException $e) {
 
-            die(
-                "Error al guardar en la base de datos: " .
-                htmlspecialchars($e->getMessage())
+            Flash::set(
+                "No fue posible guardar el producto.",
+                "error"
             );
+
+            header(
+                'Location: /origins_games/producto/admin'
+            );
+
+            exit();
         }
     }
 
 
-    // Eliminar producto
+    // =========================================================
+    // ELIMINAR PRODUCTO
+    // =========================================================
+
     public function eliminar()
     {
         AuthMiddleware::requireAdmin();
+
 
         $id = isset($_GET['id'])
             ? (int) $_GET['id']
             : 0;
 
-        if ($id > 0) {
+
+        if ($id <= 0) {
+
+            Flash::set(
+                "Producto no válido.",
+                "error"
+            );
+
+            header(
+                'Location: /origins_games/producto/admin'
+            );
+
+            exit();
+        }
+
+
+        try {
 
             $stmt = $this->db->prepare(
                 "DELETE FROM productos
@@ -386,7 +509,32 @@ class ProductoController
             );
 
             $stmt->execute([$id]);
+
+
+            if ($stmt->rowCount() > 0) {
+
+                Flash::set(
+                    "Producto eliminado correctamente.",
+                    "success"
+                );
+
+            } else {
+
+                Flash::set(
+                    "El producto no existe.",
+                    "error"
+                );
+            }
+
+
+        } catch (PDOException $e) {
+
+            Flash::set(
+                "No fue posible eliminar el producto.",
+                "error"
+            );
         }
+
 
         header(
             'Location: /origins_games/producto/admin'

@@ -5,6 +5,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../../config/AuthMiddleware.php';
+require_once __DIR__ . '/../../config/Flash.php';
+
+$flash = Flash::get();
 
 
 // ============================================================
@@ -60,6 +63,144 @@ if (
 
     <style>
 
+        /* =====================================================
+           MENSAJES DEL SISTEMA
+        ===================================================== */
+
+        .flash-message {
+            width: 100%;
+
+            margin-bottom: 25px;
+
+            padding: 15px 18px;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: .9rem;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, .35);
+
+            backdrop-filter: blur(12px);
+        }
+
+
+        .flash-icon {
+            width: 30px;
+
+            height: 30px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            flex-shrink: 0;
+
+            font-size: 1rem;
+
+            font-weight: 800;
+        }
+
+
+        .flash-text {
+            flex: 1;
+
+            line-height: 1.4;
+        }
+
+
+        /* =====================================================
+           MENSAJE DE ÉXITO
+        ===================================================== */
+
+        .flash-success {
+            background: rgba(16, 185, 129, .12);
+
+            border: 1px solid rgba(16, 185, 129, .4);
+
+            color: #6ee7b7;
+        }
+
+
+        .flash-success .flash-icon {
+            background: rgba(16, 185, 129, .18);
+
+            color: #34d399;
+        }
+
+
+        /* =====================================================
+           MENSAJE DE ERROR
+        ===================================================== */
+
+        .flash-error {
+            background: rgba(239, 68, 68, .12);
+
+            border: 1px solid rgba(239, 68, 68, .4);
+
+            color: #fca5a5;
+        }
+
+
+        .flash-error .flash-icon {
+            background: rgba(239, 68, 68, .18);
+
+            color: #f87171;
+        }
+
+
+        /* =====================================================
+           MENSAJE DE ADVERTENCIA
+        ===================================================== */
+
+        .flash-warning {
+            background: rgba(250, 204, 21, .12);
+
+            border: 1px solid rgba(250, 204, 21, .4);
+
+            color: #fde68a;
+        }
+
+
+        .flash-warning .flash-icon {
+            background: rgba(250, 204, 21, .18);
+
+            color: #facc15;
+        }
+
+
+        /* =====================================================
+           MENSAJE DE INFORMACIÓN
+        ===================================================== */
+
+        .flash-info {
+            background: rgba(6, 182, 212, .12);
+
+            border: 1px solid rgba(6, 182, 212, .4);
+
+            color: #67e8f9;
+        }
+
+
+        .flash-info .flash-icon {
+            background: rgba(6, 182, 212, .18);
+
+            color: #22d3ee;
+        }
+
+
         :root {
             --bg-dark: #030712;
             --bg-card: #0b1329;
@@ -80,7 +221,9 @@ if (
 
         * {
             box-sizing: border-box;
+
             margin: 0;
+
             padding: 0;
         }
 
@@ -107,6 +250,7 @@ if (
             min-height: 100vh;
 
             display: flex;
+
             flex-direction: column;
         }
 
@@ -133,12 +277,15 @@ if (
             padding: 16px 40px;
 
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
 
             gap: 20px;
 
             position: sticky;
+
             top: 0;
 
             z-index: 1000;
@@ -151,6 +298,7 @@ if (
 
         .navbar .logo {
             font-size: 1.5rem;
+
             font-weight: 800;
 
             color: var(--yellow-accent);
@@ -175,6 +323,7 @@ if (
 
         .nav-links {
             display: flex;
+
             align-items: center;
 
             justify-content: center;
@@ -214,6 +363,7 @@ if (
             position: relative;
 
             display: flex;
+
             align-items: center;
         }
 
@@ -222,6 +372,7 @@ if (
             display: inline-flex;
 
             align-items: center;
+
             justify-content: center;
 
             gap: 7px;
@@ -455,19 +606,24 @@ if (
 
         .user-profile-menu {
             position: relative;
+
             display: flex;
+
             align-items: center;
         }
 
 
         .user-profile-button {
             display: inline-flex;
+
             align-items: center;
+
             gap: 6px;
 
             color: var(--text-secondary) !important;
 
             font-size: 0.85rem;
+
             font-weight: 600;
 
             max-width: 170px;
@@ -1099,7 +1255,10 @@ if (
                     onclick="return false;"
                 >
                     Administración
-                    <span class="admin-arrow">▼</span>
+
+                    <span class="admin-arrow">
+                        ▼
+                    </span>
                 </a>
 
 
@@ -1225,3 +1384,34 @@ if (
 
 
 <main class="container">
+
+    <?php if ($flash): ?>
+
+        <?php
+            $tipo = $flash['tipo'] ?? 'success';
+
+            $iconos = [
+                'success' => '✓',
+                'error'   => '!',
+                'warning' => '⚠',
+                'info'    => 'i'
+            ];
+
+            $icono = $iconos[$tipo] ?? '✓';
+        ?>
+
+        <div
+            class="flash-message flash-<?= htmlspecialchars($tipo) ?>"
+        >
+
+            <div class="flash-icon">
+                <?= $icono ?>
+            </div>
+
+            <div class="flash-text">
+                <?= htmlspecialchars($flash['mensaje']) ?>
+            </div>
+
+        </div>
+
+    <?php endif; ?>

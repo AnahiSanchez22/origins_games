@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+
 
 <style>
     .pedidos-header {
@@ -144,7 +144,7 @@
         <h2>Gestión de Pedidos</h2>
 
         <p>
-            Consulta y administra los pedidos realizados en Origins Games.
+            Consulta y administración de pedidos.
         </p>
 
     </div>
@@ -268,4 +268,3 @@
 </div>
 
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

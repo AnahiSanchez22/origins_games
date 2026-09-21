@@ -15,21 +15,40 @@ class DashboardController
         $this->dashboardModel = new Dashboard();
     }
 
+
     public function index()
     {
         // Resumen general
         $resumen = $this->dashboardModel->getResumen();
 
+
         // Estados de los pedidos
-        $pedidosEstado = $this->dashboardModel->getPedidosPorEstado();
+        $pedidosEstado =
+            $this->dashboardModel->getPedidosPorEstado();
+
 
         // Últimos pedidos
-        $pedidosRecientes = $this->dashboardModel->getPedidosRecientes(5);
+        $pedidosRecientes =
+            $this->dashboardModel->getPedidosRecientes(5);
+
 
         // Productos con poco stock
-        $productosStockBajo = $this->dashboardModel->getProductosStockBajo(6);
+        $productosStockBajo =
+            $this->dashboardModel->getProductosStockBajo(6);
+
+
+        // Ventas de los últimos 6 meses
+        $ventasPorMes =
+            $this->dashboardModel->getVentasPorMes();
+
+
+        // Productos más vendidos
+        $productosMasVendidos =
+            $this->dashboardModel->getProductosMasVendidos(5);
+
 
         $pageTitle = 'Dashboard - Origins Games';
+
 
         require_once __DIR__ . '/../views/layouts/header.php';
 

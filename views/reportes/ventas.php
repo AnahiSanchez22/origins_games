@@ -283,7 +283,7 @@ $productosVendidos = $productosVendidos ?? [];
 
     <div class="reporte-header">
         <h1>Reporte de Ventas</h1>
-        <p>Consulta y analiza las ventas realizadas en Origins Games.</p>
+        <p>Consultar y analizar ventas</p>
 
         <?php if (!empty($fechaInicio) || !empty($fechaFin)): ?>
             <div class="rango-activo">

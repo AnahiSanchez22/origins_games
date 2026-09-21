@@ -2,6 +2,7 @@
 
 require_once "models/Usuario.php";
 require_once "config/AuthMiddleware.php";
+require_once "config/Flash.php";
 
 
 class UsuarioController
@@ -89,6 +90,11 @@ class UsuarioController
 
                 if ($resultado) {
 
+                    Flash::set(
+                        "Usuario creado correctamente.",
+                        "success"
+                    );
+
                     header("Location: /origins_games/usuario");
                     exit();
 
@@ -126,6 +132,11 @@ class UsuarioController
 
         if ($id <= 0) {
 
+            Flash::set(
+                "Usuario no válido.",
+                "error"
+            );
+
             header("Location: /origins_games/usuario");
             exit();
 
@@ -138,6 +149,11 @@ class UsuarioController
 
 
         if (!$usuario) {
+
+            Flash::set(
+                "El usuario no existe.",
+                "error"
+            );
 
             header("Location: /origins_games/usuario");
             exit();
@@ -233,6 +249,11 @@ class UsuarioController
                         }
 
 
+                        Flash::set(
+                            "Usuario actualizado correctamente.",
+                            "success"
+                        );
+
                         header("Location: /origins_games/usuario");
                         exit();
 
@@ -253,7 +274,7 @@ class UsuarioController
         $pageTitle = "Editar Usuario - Admin";
 
         require_once "views/layouts/header.php";
-        require_once "views/usuarios/editar.php";
+        require_once "views/usuarios/editar-admin.php";
         require_once "views/layouts/footer.php";
     }
 
@@ -273,6 +294,11 @@ class UsuarioController
 
         if ($id <= 0) {
 
+            Flash::set(
+                "Usuario no válido.",
+                "error"
+            );
+
             header("Location: /origins_games/usuario");
             exit();
 
@@ -288,6 +314,11 @@ class UsuarioController
             isset($_SESSION['usuario']['id']) &&
             $id == $_SESSION['usuario']['id']
         ) {
+
+            Flash::set(
+                "No puedes eliminar tu propio usuario administrador.",
+                "error"
+            );
 
             header("Location: /origins_games/usuario");
             exit();
@@ -305,7 +336,30 @@ class UsuarioController
 
         if ($usuario) {
 
-            $this->usuarioModel->delete($id);
+            $resultado = $this->usuarioModel->delete($id);
+
+            if ($resultado) {
+
+                Flash::set(
+                    "Usuario eliminado correctamente.",
+                    "success"
+                );
+
+            } else {
+
+                Flash::set(
+                    "No fue posible eliminar el usuario.",
+                    "error"
+                );
+
+            }
+
+        } else {
+
+            Flash::set(
+                "El usuario no existe.",
+                "error"
+            );
 
         }
 
