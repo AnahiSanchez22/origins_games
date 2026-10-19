@@ -1,3 +1,4 @@
+
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -26,7 +27,7 @@ switch ($url) {
     case '/':
     case '/home':
 
-        require_once 'controllers/HomeController.php';
+        require_once __DIR__ . '/controllers/HomeController.php';
 
         (new HomeController())->index();
 
@@ -39,7 +40,7 @@ switch ($url) {
 
     case '/auth/login':
 
-        require_once 'controllers/AuthController.php';
+        require_once __DIR__ . '/controllers/AuthController.php';
 
         (new AuthController())->login();
 
@@ -48,7 +49,7 @@ switch ($url) {
 
     case '/auth/register':
 
-        require_once 'controllers/AuthController.php';
+        require_once __DIR__ . '/controllers/AuthController.php';
 
         (new AuthController())->register();
 
@@ -57,7 +58,7 @@ switch ($url) {
 
     case '/auth/logout':
 
-        require_once 'controllers/AuthController.php';
+        require_once __DIR__ . '/controllers/AuthController.php';
 
         (new AuthController())->logout();
 
@@ -70,7 +71,7 @@ switch ($url) {
 
     case '/perfil':
 
-        require_once 'controllers/PerfilController.php';
+        require_once __DIR__ . '/controllers/PerfilController.php';
 
         (new PerfilController())->index();
 
@@ -79,7 +80,7 @@ switch ($url) {
 
     case '/perfil/editar':
 
-        require_once 'controllers/PerfilController.php';
+        require_once __DIR__ . '/controllers/PerfilController.php';
 
         (new PerfilController())->editar();
 
@@ -92,7 +93,7 @@ switch ($url) {
 
     case '/favoritos':
 
-        require_once 'controllers/FavoritoController.php';
+        require_once __DIR__ . '/controllers/FavoritoController.php';
 
         (new FavoritoController())->index();
 
@@ -101,7 +102,7 @@ switch ($url) {
 
     case '/favoritos/agregar':
 
-        require_once 'controllers/FavoritoController.php';
+        require_once __DIR__ . '/controllers/FavoritoController.php';
 
         (new FavoritoController())->agregar();
 
@@ -110,7 +111,7 @@ switch ($url) {
 
     case '/favoritos/eliminar':
 
-        require_once 'controllers/FavoritoController.php';
+        require_once __DIR__ . '/controllers/FavoritoController.php';
 
         (new FavoritoController())->eliminar();
 
@@ -124,7 +125,7 @@ switch ($url) {
     case '/usuario':
     case '/usuario/index':
 
-        require_once 'controllers/UsuarioController.php';
+        require_once __DIR__ . '/controllers/UsuarioController.php';
 
         (new UsuarioController())->index();
 
@@ -133,7 +134,7 @@ switch ($url) {
 
     case '/usuario/create':
 
-        require_once 'controllers/UsuarioController.php';
+        require_once __DIR__ . '/controllers/UsuarioController.php';
 
         (new UsuarioController())->create();
 
@@ -142,7 +143,7 @@ switch ($url) {
 
     case '/usuario/edit':
 
-        require_once 'controllers/UsuarioController.php';
+        require_once __DIR__ . '/controllers/UsuarioController.php';
 
         $id = $_GET['id'] ?? null;
 
@@ -153,7 +154,7 @@ switch ($url) {
 
     case '/usuario/delete':
 
-        require_once 'controllers/UsuarioController.php';
+        require_once __DIR__ . '/controllers/UsuarioController.php';
 
         $id = $_GET['id'] ?? null;
 
@@ -168,7 +169,7 @@ switch ($url) {
 
     case '/producto':
 
-        require_once 'controllers/ProductoController.php';
+        require_once __DIR__ . '/controllers/ProductoController.php';
 
         (new ProductoController())->index();
 
@@ -177,7 +178,7 @@ switch ($url) {
 
     case '/producto/admin':
 
-        require_once 'controllers/ProductoController.php';
+        require_once __DIR__ . '/controllers/ProductoController.php';
 
         (new ProductoController())->admin();
 
@@ -186,7 +187,7 @@ switch ($url) {
 
     case '/producto/guardar':
 
-        require_once 'controllers/ProductoController.php';
+        require_once __DIR__ . '/controllers/ProductoController.php';
 
         (new ProductoController())->guardar();
 
@@ -195,7 +196,7 @@ switch ($url) {
 
     case '/producto/eliminar':
 
-        require_once 'controllers/ProductoController.php';
+        require_once __DIR__ . '/controllers/ProductoController.php';
 
         (new ProductoController())->eliminar();
 
@@ -208,7 +209,7 @@ switch ($url) {
 
     case '/cita':
 
-        require_once 'controllers/CitaController.php';
+        require_once __DIR__ . '/controllers/CitaController.php';
 
         (new CitaController())->index();
 
@@ -217,7 +218,7 @@ switch ($url) {
 
     case '/cita/guardar':
 
-        require_once 'controllers/CitaController.php';
+        require_once __DIR__ . '/controllers/CitaController.php';
 
         (new CitaController())->guardar();
 
@@ -226,7 +227,7 @@ switch ($url) {
 
     case '/cita/admin':
 
-        require_once 'controllers/CitaController.php';
+        require_once __DIR__ . '/controllers/CitaController.php';
 
         (new CitaController())->admin();
 
@@ -235,7 +236,7 @@ switch ($url) {
 
     case '/cita/cambiarEstado':
 
-        require_once 'controllers/CitaController.php';
+        require_once __DIR__ . '/controllers/CitaController.php';
 
         (new CitaController())->cambiarEstado();
 
@@ -244,7 +245,7 @@ switch ($url) {
 
     case '/cita/cancelar':
 
-        require_once 'controllers/CitaController.php';
+        require_once __DIR__ . '/controllers/CitaController.php';
 
         (new CitaController())->cancelar();
 
@@ -304,7 +305,7 @@ switch ($url) {
 
     case '/mis-pedidos':
 
-        require_once 'controllers/PedidoController.php';
+        require_once __DIR__ . '/controllers/PedidoController.php';
 
         (new PedidoController())->misPedidos();
 
@@ -313,7 +314,7 @@ switch ($url) {
 
     case '/mis-pedidos/detalle':
 
-        require_once 'controllers/PedidoController.php';
+        require_once __DIR__ . '/controllers/PedidoController.php';
 
         (new PedidoController())->detalle();
 
@@ -326,7 +327,7 @@ switch ($url) {
 
     case '/dashboard':
 
-        require_once 'controllers/DashboardController.php';
+        require_once __DIR__ . '/controllers/DashboardController.php';
 
         (new DashboardController())->index();
 
@@ -339,7 +340,7 @@ switch ($url) {
 
     case '/pedido/admin':
 
-        require_once 'controllers/PedidoController.php';
+        require_once __DIR__ . '/controllers/PedidoController.php';
 
         (new PedidoController())->admin();
 
@@ -348,7 +349,7 @@ switch ($url) {
 
     case '/pedido/ver':
 
-        require_once 'controllers/PedidoController.php';
+        require_once __DIR__ . '/controllers/PedidoController.php';
 
         (new PedidoController())->ver();
 
@@ -357,7 +358,7 @@ switch ($url) {
 
     case '/pedido/cambiarEstado':
 
-        require_once 'controllers/PedidoController.php';
+        require_once __DIR__ . '/controllers/PedidoController.php';
 
         (new PedidoController())->cambiarEstado();
 
@@ -370,9 +371,20 @@ switch ($url) {
 
     case '/reporte-ventas':
 
-        require_once 'controllers/ReporteVentasController.php';
+        require_once __DIR__ . '/controllers/ReporteVentasController.php';
 
         (new ReporteVentasController())->index();
+
+        break;
+
+
+    // =========================================================
+    // QUIÉNES SOMOS
+    // =========================================================
+
+    case '/quienes-somos':
+
+        require_once __DIR__ . '/views/home/quienes-somos.php';
 
         break;
 
@@ -403,7 +415,7 @@ switch ($url) {
 
             <p style='color:#94a3b8;'>
                 La ruta
-                <b>" . htmlspecialchars($url) . "</b>
+                <b>" . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . "</b>
                 no existe en Origins Games.
             </p>
 

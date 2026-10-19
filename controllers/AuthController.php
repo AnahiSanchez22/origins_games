@@ -1,38 +1,44 @@
 
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 require_once __DIR__ . '/../models/Usuario.php';
 
-class AuthController {
+class AuthController
+{
     private $usuarioModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->usuarioModel = new Usuario();
     }
 
-    // Iniciar Sesión
-    public function login() {
+    // Iniciar sesión
+    public function login()
+    {
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $correo = trim($_POST['correo'] ?? '');
-            $password = trim($_POST['password'] ?? '');
+            $password = $_POST['password'] ?? '';
 
-            if (empty($correo) || empty($password)) {
+            if ($correo === '' || $password === '') {
                 $error = "Por favor, completa todos los campos.";
                 require_once __DIR__ . '/../views/auth/login.php';
                 return;
             }
 
-            // Buscar el usuario por su correo electrónico.
+            // Buscar al usuario por correo electrónico.
             $usuario = $this->usuarioModel->findByEmail($correo);
 
-            // Verificar la contraseña almacenada mediante hash.
-            if ($usuario && password_verify($password, $usuario['password'])) {
-
+            // Verificar la contraseña comparándola con su hash.
+            if (
+                $usuario &&
+                password_verify($password, $usuario['password'])
+            ) {
                 // Guardar los datos del usuario en la sesión.
                 $_SESSION['usuario'] = [
                     'id' => $usuario['id'],
@@ -44,7 +50,6 @@ class AuthController {
 
                 header('Location: /origins_games/home');
                 exit();
-
             } else {
                 $error = "El correo o la contraseña son incorrectos.";
                 require_once __DIR__ . '/../views/auth/login.php';
@@ -55,19 +60,27 @@ class AuthController {
         require_once __DIR__ . '/../views/auth/login.php';
     }
 
-    // Registrar Usuario
-    public function register() {
+    // Registrar usuario
+    public function register()
+    {
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre = trim($_POST['nombre'] ?? '');
             $correo = trim($_POST['correo'] ?? '');
+
+            // No aplicar trim() a la contraseña.
             $password = $_POST['password'] ?? '';
+
             $telefono = trim($_POST['telefono'] ?? '');
             $direccion = trim($_POST['direccion'] ?? '');
 
             // Validar los campos obligatorios.
-            if (empty($nombre) || empty($correo) || $password === '') {
+            if (
+                $nombre === '' ||
+                $correo === '' ||
+                $password === ''
+            ) {
                 $error = "Por favor, completa todos los campos obligatorios.";
                 require_once __DIR__ . '/../views/auth/register.php';
                 return;
@@ -76,6 +89,22 @@ class AuthController {
             // Comprobar que el correo tenga un formato válido.
             if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
                 $error = "Ingresa un correo electrónico válido.";
+                require_once __DIR__ . '/../views/auth/register.php';
+                return;
+            }
+
+            /*
+             * Validar la seguridad de la contraseña.
+             * Debe tener al menos 8 caracteres, una mayúscula,
+             * una minúscula y un número.
+             */
+            $patronPassword = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/';
+
+            if (!preg_match($patronPassword, $password)) {
+                $error = "La contraseña debe tener mínimo 8 caracteres, "
+                       . "una letra mayúscula, una letra minúscula "
+                       . "y un número.";
+
                 require_once __DIR__ . '/../views/auth/register.php';
                 return;
             }
@@ -96,8 +125,7 @@ class AuthController {
             }
 
             // Crear la cuenta con el rol de cliente.
-            // El modelo Usuario se encarga del almacenamiento
-            // y del hash de la contraseña.
+            // El modelo Usuario se encarga del hash de la contraseña.
             $resultado = $this->usuarioModel->create([
                 'rol_id' => 2,
                 'nombre' => $nombre,
@@ -120,8 +148,9 @@ class AuthController {
         require_once __DIR__ . '/../views/auth/register.php';
     }
 
-    // Cerrar Sesión
-    public function logout() {
+    // Cerrar sesión
+    public function logout()
+    {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }

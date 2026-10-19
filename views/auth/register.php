@@ -56,6 +56,44 @@
         height: 16px;
     }
 
+    /* Requisitos compactos de contraseña */
+    .password-help {
+        margin: 5px 0 3px;
+        color: var(--text-secondary, #94a3b8);
+        font-size: 0.74rem;
+        line-height: 1.4;
+    }
+
+    .password-requirements {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px 10px;
+        margin-top: 3px;
+        color: var(--text-secondary, #94a3b8);
+        font-size: 0.72rem;
+    }
+
+    .password-requirement {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+        transition: color 0.2s;
+    }
+
+    .password-requirement::before {
+        content: "○";
+        font-size: 0.72rem;
+    }
+
+    .password-requirement.valid {
+        color: #34d399;
+    }
+
+    .password-requirement.valid::before {
+        content: "✓";
+    }
+
     /* Control CSS de la ventana emergente */
     #privacy-modal-toggle {
         position: absolute;
@@ -204,6 +242,10 @@
             margin: 24px -20px -24px;
             padding: 14px 20px;
         }
+
+        .password-requirements {
+            gap: 5px 9px;
+        }
     }
 </style>
 
@@ -262,8 +304,32 @@
                 id="password"
                 name="password"
                 required
+                minlength="8"
+                pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                title="Mínimo 8 caracteres, una mayúscula, una minúscula y un número."
+                aria-describedby="password-help"
                 placeholder="••••••••"
+                autocomplete="new-password"
             >
+
+            <p id="password-help" class="password-help">
+                Mín. 8 caracteres, mayúscula, minúscula y número.
+            </p>
+
+            <div class="password-requirements" aria-live="polite">
+                <span class="password-requirement" id="req-length">
+                    8 caracteres
+                </span>
+                <span class="password-requirement" id="req-upper">
+                    Mayúscula
+                </span>
+                <span class="password-requirement" id="req-lower">
+                    Minúscula
+                </span>
+                <span class="password-requirement" id="req-number">
+                    Número
+                </span>
+            </div>
         </div>
 
         <!-- Interruptor CSS para mostrar la política -->
@@ -278,6 +344,7 @@
             <div
                 class="privacy-modal-content"
                 role="dialog"
+                aria-modal="true"
                 aria-labelledby="privacy-title"
                 aria-describedby="privacy-description"
             >
@@ -295,7 +362,7 @@
 
                     <h3>1. Finalidad del proyecto</h3>
                     <p>
-                        Origins Games es una aplicación web desarrollada
+                        Origins Games es una pagina web desarrollada
                         con fines académicos para simular el funcionamiento
                         de una tienda virtual de videojuegos y productos
                         relacionados. Sus funcionalidades incluyen el
@@ -415,6 +482,7 @@
                     name="privacy_accept"
                     value="1"
                     <?= isset($_POST['privacy_accept']) && $_POST['privacy_accept'] === '1' ? 'checked' : '' ?>
+                    required
                 >
                 <span>
                     He leído y acepto la política de privacidad y el
@@ -433,5 +501,48 @@
         <a href="/origins_games/auth/login">Inicia sesión aquí</a>
     </div>
 </div>
+
+<script>
+    // Actualiza los requisitos de forma discreta al escribir.
+    (function () {
+        const passwordInput = document.getElementById('password');
+
+        if (!passwordInput) {
+            return;
+        }
+
+        const requirements = {
+            length: document.getElementById('req-length'),
+            upper: document.getElementById('req-upper'),
+            lower: document.getElementById('req-lower'),
+            number: document.getElementById('req-number')
+        };
+
+        function updatePasswordRequirements() {
+            const password = passwordInput.value;
+
+            const checks = {
+                length: password.length >= 8,
+                upper: /[A-Z]/.test(password),
+                lower: /[a-z]/.test(password),
+                number: /\d/.test(password)
+            };
+
+            Object.keys(checks).forEach(function (key) {
+                requirements[key].classList.toggle(
+                    'valid',
+                    checks[key]
+                );
+            });
+        }
+
+        passwordInput.addEventListener(
+            'input',
+            updatePasswordRequirements
+        );
+
+        updatePasswordRequirements();
+    })();
+</script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

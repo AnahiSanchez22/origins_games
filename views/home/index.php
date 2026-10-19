@@ -1,3 +1,6 @@
+
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+
 <div style="text-align: center; padding: 30px 0 50px;">
 
     <h1
@@ -28,6 +31,7 @@
             display: flex;
             gap: 16px;
             justify-content: center;
+            flex-wrap: wrap;
         "
     >
 
@@ -154,9 +158,7 @@
                     </div>
 
 
-                    <!-- =================================
-                         PRODUCTO DISPONIBLE
-                         ================================= -->
+                    <!-- PRODUCTO DISPONIBLE -->
 
                     <?php if ((int)($p['stock'] ?? 0) > 0): ?>
 
@@ -185,7 +187,6 @@
                                 value="<?= (int)$p['id'] ?>"
                             >
 
-
                             <button
                                 type="submit"
                                 class="btn btn-primary"
@@ -197,9 +198,7 @@
                         </form>
 
 
-                    <!-- =================================
-                         PRODUCTO AGOTADO
-                         ================================= -->
+                    <!-- PRODUCTO AGOTADO -->
 
                     <?php else: ?>
 
@@ -213,7 +212,6 @@
                         >
                             Producto agotado
                         </div>
-
 
                         <button
                             type="button"
@@ -240,7 +238,6 @@
 
         <?php endforeach; ?>
 
-
     <?php else: ?>
 
         <p
@@ -260,7 +257,7 @@
 
 
 <!-- =========================================
-     SOPORTE TECNICO Y CITAS
+     SOPORTE TÉCNICO Y CITAS
      ========================================= -->
 
 <h2
@@ -341,7 +338,7 @@
     </div>
 
 
-    <!-- REPARACION -->
+    <!-- REPARACIÓN -->
 
     <div
         class="card-item"
@@ -711,3 +708,137 @@
     </div>
 
 </div>
+
+
+<!-- =========================================
+     QUIÉNES SOMOS
+     Al final de la página principal
+     ========================================= -->
+
+<style>
+    .about-origins {
+        margin-top: 60px;
+        padding: 34px;
+        border: 1px solid var(--border-card);
+        border-radius: 18px;
+        background: linear-gradient(
+            135deg,
+            rgba(6, 182, 212, .07),
+            var(--bg-card) 55%,
+            rgba(250, 204, 21, .04)
+        );
+    }
+
+    .about-eyebrow {
+        margin-bottom: 10px;
+        color: var(--cyan-accent);
+        font-size: .76rem;
+        font-weight: 800;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+    }
+
+    .about-heading {
+        margin: 0 0 14px;
+        color: var(--text-primary);
+        font-size: clamp(1.7rem, 4vw, 2.35rem);
+        font-weight: 800;
+    }
+
+    .about-heading span {
+        color: var(--yellow-accent);
+    }
+
+    .about-intro {
+        max-width: 760px;
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: .95rem;
+        line-height: 1.8;
+    }
+
+    .about-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-card);
+    }
+
+    .about-bottom p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: .88rem;
+        line-height: 1.7;
+    }
+
+    .about-bottom strong {
+        color: var(--text-primary);
+    }
+
+    .about-cta {
+        display: inline-block;
+        flex-shrink: 0;
+        padding: 11px 18px;
+        border: 1px solid var(--yellow-accent);
+        border-radius: 9px;
+        color: var(--yellow-accent);
+        font-size: .88rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+
+    .about-cta:hover {
+        background: var(--yellow-accent);
+        color: var(--bg-dark);
+    }
+
+    @media (max-width: 650px) {
+        .about-origins {
+            padding: 24px 20px;
+        }
+
+        .about-bottom {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="about-origins"
+         id="quienes-somos"
+         aria-labelledby="about-origins-title">
+
+    <p class="about-eyebrow">Detrás de Origins Games</p>
+
+    <h2 class="about-heading" id="about-origins-title">
+        Todo gran juego tiene un <span>origen.</span>
+    </h2>
+
+    <p class="about-intro">
+        Origins Games es un proyecto académico que integra el
+        mundo gamer con una tienda virtual. La plataforma permite
+        consultar productos y cuenta con funciones para gestionar
+        usuarios, inventario, carritos y pedidos.
+    </p>
+
+    <div class="about-bottom">
+        <p>
+            <strong>Un proyecto creado desde la idea hasta el código.</strong>
+            <br>
+            Conoce más sobre el proyecto y sus integrantes.
+        </p>
+
+        <a href="/origins_games/quienes-somos"
+           class="about-cta">
+            Conócenos →
+        </a>
+    </div>
+
+</section>
+
+
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
