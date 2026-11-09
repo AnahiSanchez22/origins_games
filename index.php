@@ -369,6 +369,16 @@ switch ($url) {
     // REPORTE DE VENTAS - ADMIN
     // =========================================================
 
+    
+    case '/reporte-ventas/pdf':
+
+        require_once __DIR__ . '/controllers/ReporteVentasController.php';
+
+        (new ReporteVentasController())->exportarPdf();
+
+        break;
+
+    
     case '/reporte-ventas':
 
         require_once __DIR__ . '/controllers/ReporteVentasController.php';

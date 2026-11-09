@@ -42,6 +42,24 @@ class Cita
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Comprueba si ya existe una cita pendiente o confirmada
+     * en la misma fecha y hora.
+     */
+    public function horarioOcupado($fecha, $hora)
+    {
+        $sql = "SELECT COUNT(*)
+                FROM citas
+                WHERE fecha_cita = ?
+                AND hora_cita = ?
+                AND estado IN ('pendiente', 'confirmada')";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$fecha, $hora]);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
     public function create($data)
     {
         $sql = "INSERT INTO citas
@@ -71,46 +89,16 @@ class Cita
     public function getServicios()
     {
         return [
-            [
-                'id' => 1,
-                'nombre' => 'Mantenimiento Preventivo Limpieza General'
-            ],
-            [
-                'id' => 2,
-                'nombre' => 'Cambio de Pasta Térmica y Almohadillas'
-            ],
-            [
-                'id' => 3,
-                'nombre' => 'Mantenimiento y Calibración de Controles'
-            ],
-            [
-                'id' => 4,
-                'nombre' => 'Diagnóstico General de Fallas'
-            ],
-            [
-                'id' => 5,
-                'nombre' => 'Reparación de Fuente de Poder / Encendido'
-            ],
-            [
-                'id' => 6,
-                'nombre' => 'Cambio o Actualización de Disco Duro / SSD'
-            ],
-            [
-                'id' => 7,
-                'nombre' => 'Reparación de Puerto HDMI / Conectores'
-            ],
-            [
-                'id' => 8,
-                'nombre' => 'Mantenimiento de Sistema de Refrigeración'
-            ],
-            [
-                'id' => 9,
-                'nombre' => 'Formateo e Instalación de Sistema Operativo'
-            ],
-            [
-                'id' => 10,
-                'nombre' => 'Limpieza Profunda Interna y Externa'
-            ]
+            ['id' => 1, 'nombre' => 'Mantenimiento Preventivo Limpieza General'],
+            ['id' => 2, 'nombre' => 'Cambio de Pasta Térmica y Almohadillas'],
+            ['id' => 3, 'nombre' => 'Mantenimiento y Calibración de Controles'],
+            ['id' => 4, 'nombre' => 'Diagnóstico General de Fallas'],
+            ['id' => 5, 'nombre' => 'Reparación de Fuente de Poder / Encendido'],
+            ['id' => 6, 'nombre' => 'Cambio o Actualización de Disco Duro / SSD'],
+            ['id' => 7, 'nombre' => 'Reparación de Puerto HDMI / Conectores'],
+            ['id' => 8, 'nombre' => 'Mantenimiento de Sistema de Refrigeración'],
+            ['id' => 9, 'nombre' => 'Formateo e Instalación de Sistema Operativo'],
+            ['id' => 10, 'nombre' => 'Limpieza Profunda Interna y Externa']
         ];
     }
 
@@ -132,7 +120,7 @@ class Cita
              SET estado = 'cancelada'
              WHERE id = ?
              AND usuario_id = ?
-             AND estado != 'completada'"
+             AND estado IN ('pendiente', 'confirmada')"
         );
 
         return $stmt->execute([$id, $usuario_id]);

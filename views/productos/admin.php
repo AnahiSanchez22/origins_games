@@ -1,3 +1,4 @@
+
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <?php
@@ -6,21 +7,26 @@ $editarProd = null;
 
 if (isset($_GET['edit'])) {
 
-    $idEditar = (int) $_GET['edit'];
-
-    $stmtEdit = $this->db->prepare(
-        "SELECT *
-         FROM productos
-         WHERE id = ?"
+    $idEditar = filter_var(
+        $_GET['edit'],
+        FILTER_VALIDATE_INT
     );
 
-    $stmtEdit->execute([$idEditar]);
+    if ($idEditar !== false && $idEditar > 0) {
 
-    $editarProd = $stmtEdit->fetch(PDO::FETCH_ASSOC);
+        $stmtEdit = $this->db->prepare(
+            "SELECT *
+             FROM productos
+             WHERE id = ?"
+        );
+
+        $stmtEdit->execute([$idEditar]);
+
+        $editarProd = $stmtEdit->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>
-
 
 <style>
 
@@ -235,6 +241,8 @@ if (isset($_GET['edit'])) {
             <?php endif; ?>
 
 
+            <!-- NOMBRE -->
+
             <div class="form-group">
 
                 <label>
@@ -245,8 +253,11 @@ if (isset($_GET['edit'])) {
                     type="text"
                     name="nombre"
                     required
+                    maxlength="150"
                     value="<?= htmlspecialchars(
-                        $editarProd['nombre'] ?? ''
+                        $editarProd['nombre'] ?? '',
+                        ENT_QUOTES,
+                        'UTF-8'
                     ) ?>"
                     placeholder="Ej. Control DualSense"
                 >
@@ -254,13 +265,22 @@ if (isset($_GET['edit'])) {
             </div>
 
 
+            <!-- CATEGORÍA -->
+
             <div class="form-group">
 
                 <label>
-                    Categoría
+                    Categoría *
                 </label>
 
-                <select name="categoria_id">
+                <select
+                    name="categoria_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecciona una categoría
+                    </option>
 
                     <option
                         value="1"
@@ -294,23 +314,31 @@ if (isset($_GET['edit'])) {
             </div>
 
 
+            <!-- PRECIO -->
+
             <div class="form-group">
 
                 <label>
-                    Precio ($) *
+                    Precio en pesos colombianos (COP) *
                 </label>
 
                 <input
                     type="number"
                     step="0.01"
-                    min="0"
+                    min="0.01"
                     name="precio"
                     required
                     value="<?= htmlspecialchars(
-                        $editarProd['precio'] ?? ''
+                        $editarProd['precio'] ?? '',
+                        ENT_QUOTES,
+                        'UTF-8'
                     ) ?>"
                     placeholder="59900"
                 >
+
+                <div class="stock-help">
+                    Ingresa el valor numérico, sin puntos ni símbolo de moneda.
+                </div>
 
             </div>
 
@@ -332,15 +360,13 @@ if (isset($_GET['edit'])) {
                         step="1"
                         required
                         value="<?= htmlspecialchars(
-                            $editarProd['stock'] ?? '0'
+                            $editarProd['stock'] ?? '0',
+                            ENT_QUOTES,
+                            'UTF-8'
                         ) ?>"
                         placeholder="0"
                     >
 
-                </div>
-
-                <div class="stock-help">
-                    Cantidad de unidades disponibles para vender.
                 </div>
 
             </div>
@@ -363,7 +389,11 @@ if (isset($_GET['edit'])) {
                     <div style="margin-bottom:10px;">
 
                         <img
-                            src="/origins_games/public/uploads/<?= htmlspecialchars($editarProd['imagen']) ?>"
+                            src="/origins_games/public/uploads/<?= htmlspecialchars(
+                                $editarProd['imagen'],
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>"
                             alt="Vista previa"
                             style="
                                 width:70px;
@@ -382,8 +412,9 @@ if (isset($_GET['edit'])) {
                 <input
                     type="file"
                     name="imagen"
-                    accept="image/*"
+                    accept=".jpg,.jpeg,.png,.gif,.webp,.avif"
                 >
+
 
             </div>
 
@@ -399,13 +430,18 @@ if (isset($_GET['edit'])) {
                 <textarea
                     name="descripcion"
                     rows="3"
+                    maxlength="2000"
                     placeholder="Detalles del producto..."
                 ><?= htmlspecialchars(
-                    $editarProd['descripcion'] ?? ''
+                    $editarProd['descripcion'] ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
                 ) ?></textarea>
 
             </div>
 
+
+            <!-- BOTÓN GUARDAR -->
 
             <button
                 type="submit"
@@ -441,7 +477,7 @@ if (isset($_GET['edit'])) {
     </div>
 
 
-    <!-- LISTA -->
+    <!-- LISTA DE PRODUCTOS -->
 
     <div class="inventario-card">
 
@@ -483,9 +519,15 @@ if (isset($_GET['edit'])) {
 
                             <img
                                 src="/origins_games/public/uploads/<?= htmlspecialchars(
-                                    $p['imagen'] ?? 'default.jpg'
+                                    $p['imagen'] ?? 'default.jpg',
+                                    ENT_QUOTES,
+                                    'UTF-8'
                                 ) ?>"
-                                alt="Producto"
+                                alt="<?= htmlspecialchars(
+                                    $p['nombre'] ?? 'Producto',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>"
                                 onerror="this.onerror=null; this.src='/origins_games/public/uploads/default.jpg';"
                             >
 
@@ -495,7 +537,9 @@ if (isset($_GET['edit'])) {
                                 <div class="producto-admin-name">
 
                                     <?= htmlspecialchars(
-                                        $p['nombre']
+                                        $p['nombre'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
                                     ) ?>
 
                                 </div>
@@ -503,13 +547,12 @@ if (isset($_GET['edit'])) {
 
                                 <div class="producto-admin-price">
 
-                                    $
-                                    <?= number_format(
+                                    $<?= number_format(
                                         (float) $p['precio'],
                                         0,
                                         ',',
                                         '.'
-                                    ) ?>
+                                    ) ?> COP
 
                                 </div>
 
@@ -527,7 +570,7 @@ if (isset($_GET['edit'])) {
                         </div>
 
 
-                        <div class="producto-actions">
+                       <div class="producto-actions">
 
                             <a
                                 href="/origins_games/producto/admin?edit=<?= (int) $p['id'] ?>"
@@ -536,14 +579,37 @@ if (isset($_GET['edit'])) {
                                 Editar
                             </a>
 
-
-                            <a
-                                href="/origins_games/producto/eliminar?id=<?= (int) $p['id'] ?>"
-                                class="btn-eliminar-producto"
-                                onclick="return confirm('¿Seguro que deseas eliminar este producto?')"
+                            <form
+                                action="/origins_games/producto/eliminar"
+                                method="POST"
+                                style="display: inline;"
+                                onsubmit="return confirm('¿Seguro que deseas eliminar este producto?')"
                             >
-                                Eliminar
-                            </a>
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    value="<?= (int) $p['id'] ?>"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn-eliminar-producto"
+                                    style="
+                                        background: transparent;
+                                        cursor: pointer;
+                                        font-family: inherit;
+                                        padding: 7px 11px;
+                                        border-radius: 9px;
+                                        font-size: .72rem;
+                                        font-weight: 700;
+                                        color: #f87171;
+                                        border: 1px solid #f87171;
+                                        transition: .2s ease;
+                                    "
+                                >
+                                    Eliminar
+                                </button>
+                            </form>
 
                         </div>
 

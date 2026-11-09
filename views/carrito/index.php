@@ -90,22 +90,38 @@
                 </tr>
             </thead>
             <tbody>
-                <?php 
+                <?php
                 $total_general = 0;
-                foreach ($_SESSION['carrito'] as $id => $item): 
+
+                foreach ($_SESSION['carrito'] as $id => $item):
                     $subtotal = $item['precio'] * $item['cantidad'];
                     $total_general += $subtotal;
                 ?>
                 <tr>
                     <td><strong><?= htmlspecialchars($item['nombre']) ?></strong></td>
-                    <td style="color: var(--cyan-accent); font-weight: 700;">$<?= number_format($item['precio'], 2) ?></td>
+
+                    <td style="color: var(--cyan-accent); font-weight: 700;">
+                        $<?= number_format((float)$item['precio'], 0, ',', '.') ?> COP
+                    </td>
+
                     <td>
                         <form action="/origins_games/carrito/actualizar" method="POST" style="margin: 0;">
                             <input type="hidden" name="producto_id" value="<?= $id ?>">
-                            <input type="number" name="cantidad" value="<?= $item['cantidad'] ?>" min="1" class="input-cantidad" onchange="this.form.submit()">
+                            <input
+                                type="number"
+                                name="cantidad"
+                                value="<?= $item['cantidad'] ?>"
+                                min="1"
+                                class="input-cantidad"
+                                onchange="this.form.submit()"
+                            >
                         </form>
                     </td>
-                    <td style="color: var(--cyan-accent); font-weight: 700;">$<?= number_format($subtotal, 2) ?></td>
+
+                    <td style="color: var(--cyan-accent); font-weight: 700;">
+                        $<?= number_format((float)$subtotal, 0, ',', '.') ?> COP
+                    </td>
+
                     <td>
                         <form action="/origins_games/carrito/eliminar" method="POST" style="margin: 0;">
                             <input type="hidden" name="producto_id" value="<?= $id ?>">
@@ -120,25 +136,39 @@
         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 20px;">
             <div>
                 <a href="/origins_games/producto" class="btn-secondary">← Volver al Catálogo</a>
+
                 <form action="/origins_games/carrito/vaciar" method="POST" style="display: inline-block; margin-left: 10px;">
-                    <button type="submit" class="btn-secondary" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">Vaciar Carrito</button>
+                    <button type="submit" class="btn-secondary" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+                        Vaciar Carrito
+                    </button>
                 </form>
             </div>
 
             <div style="text-align: right;">
                 <div style="font-size: 1.4rem; margin-bottom: 16px;">
-                    Total: <span style="color: var(--cyan-accent); font-weight: 800;">$<?= number_format($total_general, 2) ?></span>
+                    Total:
+                    <span style="color: var(--cyan-accent); font-weight: 800;">
+                        $<?= number_format((float)$total_general, 0, ',', '.') ?> COP
+                    </span>
                 </div>
+
                 <form action="/origins_games/carrito/pagar" method="POST" style="margin: 0;">
-                    <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 36px;">Proceder al Pago</button>
+                    <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 36px;">
+                        Proceder al Pago
+                    </button>
                 </form>
             </div>
         </div>
 
     <?php else: ?>
         <div style="text-align: center; padding: 40px 20px;">
-            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">Tu carrito está vacío.</p>
-            <a href="/origins_games/producto" class="btn btn-primary" style="width: auto;">Ver Productos</a>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px;">
+                Tu carrito está vacío.
+            </p>
+
+            <a href="/origins_games/producto" class="btn btn-primary" style="width: auto;">
+                Ver Productos
+            </a>
         </div>
     <?php endif; ?>
 </div>

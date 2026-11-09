@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__ . '/../config/database.php';
@@ -13,6 +14,7 @@ class Pedido
 
     /**
      * Crear pedido y descontar stock de forma segura.
+     * Los precios y el total se calculan desde la base de datos.
      */
     public function crearPedidoTransaccion(
         $usuario_id,
@@ -21,10 +23,21 @@ class Pedido
     ) {
         try {
 
+            $usuario_id = (int) $usuario_id;
+
+            if ($usuario_id <= 0) {
+                throw new Exception('Usuario inválido.');
+            }
+
+            if (!is_array($items) || empty($items)) {
+                throw new Exception('El carrito está vacío.');
+            }
+
             $this->db->beginTransaction();
 
             /*
-             * Verificar stock antes de crear el pedido.
+             * Consultar productos y bloquear sus registros
+             * mientras se procesa la compra.
              */
             $stmtProducto = $this->db->prepare(
                 "SELECT
@@ -37,43 +50,91 @@ class Pedido
                  FOR UPDATE"
             );
 
+            $productosValidados = [];
+            $productosProcesados = [];
+            $totalCentavos = 0;
+
+            /*
+             * Verificar productos, cantidades y precios.
+             */
             foreach ($items as $item) {
 
-                $producto_id = (int) $item['id'];
-                $cantidad = (int) $item['cantidad'];
-
-                if ($cantidad <= 0) {
-                    throw new Exception(
-                        'Cantidad inválida.'
-                    );
-                }
-
-                $stmtProducto->execute([
-                    $producto_id
-                ]);
-
-                $producto = $stmtProducto->fetch(
-                    PDO::FETCH_ASSOC
+                $producto_id = (int) ($item['id'] ?? 0);
+                $cantidad = filter_var(
+                    $item['cantidad'] ?? null,
+                    FILTER_VALIDATE_INT
                 );
 
+                if ($producto_id <= 0 || $cantidad === false || $cantidad <= 0) {
+                    throw new Exception('Producto o cantidad inválida.');
+                }
+
+                if (isset($productosProcesados[$producto_id])) {
+                    throw new Exception('Hay productos duplicados en el carrito.');
+                }
+
+                $productosProcesados[$producto_id] = true;
+
+                $stmtProducto->execute([$producto_id]);
+
+                $producto = $stmtProducto->fetch(PDO::FETCH_ASSOC);
+
                 if (!$producto) {
-                    throw new Exception(
-                        'El producto no existe.'
-                    );
+                    throw new Exception('El producto no existe.');
                 }
 
                 $stock = (int) $producto['stock'];
 
                 if ($stock < $cantidad) {
                     throw new Exception(
-                        'Stock insuficiente para ' .
-                        $producto['nombre']
+                        'Stock insuficiente para ' . $producto['nombre']
                     );
                 }
+
+                /*
+                 * Convertir el precio de la base de datos
+                 * a centavos para calcular el total.
+                 */
+                $precio = (float) $producto['precio'];
+
+                if (!is_finite($precio) || $precio <= 0) {
+                    throw new Exception('El precio del producto no es válido.');
+                }
+
+                $precioCentavos = (int) round($precio * 100);
+
+                $totalCentavos += $precioCentavos * $cantidad;
+
+                $productosValidados[] = [
+                    'id' => $producto_id,
+                    'cantidad' => $cantidad,
+                    'precio' => number_format(
+                        $precioCentavos / 100,
+                        2,
+                        '.',
+                        ''
+                    )
+                ];
             }
 
             /*
-             * Crear pedido.
+             * Verificar que el total no supere
+             * la capacidad de DECIMAL(10,2).
+             */
+            if ($totalCentavos <= 0 || $totalCentavos > 9999999999) {
+                throw new Exception('El total del pedido no es válido.');
+            }
+
+            $totalCalculado = number_format(
+                $totalCentavos / 100,
+                2,
+                '.',
+                ''
+            );
+
+            /*
+             * Crear pedido utilizando el total calculado
+             * con los precios reales de la base de datos.
              */
             $stmt = $this->db->prepare(
                 "INSERT INTO pedidos
@@ -87,10 +148,14 @@ class Pedido
 
             $stmt->execute([
                 $usuario_id,
-                $total
+                $totalCalculado
             ]);
 
-            $pedido_id = $this->db->lastInsertId();
+            $pedido_id = (int) $this->db->lastInsertId();
+
+            if ($pedido_id <= 0) {
+                throw new Exception('No fue posible crear el pedido.');
+            }
 
             /*
              * Preparar inserción del detalle.
@@ -117,38 +182,25 @@ class Pedido
             );
 
             /*
-             * Guardar cada producto y descontar inventario.
+             * Guardar cada producto con su precio real
+             * y descontar el inventario.
              */
-            foreach ($items as $item) {
+            foreach ($productosValidados as $producto) {
 
-                $producto_id = (int) $item['id'];
-                $cantidad = (int) $item['cantidad'];
-                $precio = (float) $item['precio'];
-
-                /*
-                 * Detalle del pedido.
-                 */
                 $stmtDetalle->execute([
                     $pedido_id,
-                    $producto_id,
-                    $cantidad,
-                    $precio
+                    $producto['id'],
+                    $producto['cantidad'],
+                    $producto['precio']
                 ]);
 
-                /*
-                 * Descontar inventario.
-                 */
                 $stmtStock->execute([
-                    $cantidad,
-                    $producto_id,
-                    $cantidad
+                    $producto['cantidad'],
+                    $producto['id'],
+                    $producto['cantidad']
                 ]);
 
-                /*
-                 * Si no se actualizó exactamente
-                 * una fila, cancelar toda la compra.
-                 */
-                if ($stmtStock->rowCount() != 1) {
+                if ($stmtStock->rowCount() !== 1) {
                     throw new Exception(
                         'No fue posible actualizar el stock.'
                     );
@@ -156,7 +208,7 @@ class Pedido
             }
 
             /*
-             * Todo salió correctamente.
+             * Confirmar toda la operación.
              */
             $this->db->commit();
 
@@ -167,6 +219,10 @@ class Pedido
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
             }
+
+            error_log(
+                'Error al crear pedido: ' . $e->getMessage()
+            );
 
             return false;
         }
@@ -195,9 +251,7 @@ class Pedido
             ':usuario_id' => $usuario_id
         ]);
 
-        return $stmt->fetchAll(
-            PDO::FETCH_ASSOC
-        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -233,17 +287,13 @@ class Pedido
             ':usuario_id' => $usuario_id
         ]);
 
-        return $stmt->fetch(
-            PDO::FETCH_ASSOC
-        );
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
     /**
      * Obtener los productos que pertenecen
      * a un pedido.
-     *
-     * Incluye nombre e imagen del producto.
      */
     public function obtenerDetallesPedido($pedido_id)
     {
@@ -268,9 +318,7 @@ class Pedido
             ':pedido_id' => $pedido_id
         ]);
 
-        return $stmt->fetchAll(
-            PDO::FETCH_ASSOC
-        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -296,9 +344,7 @@ class Pedido
 
         $stmt = $this->db->query($sql);
 
-        return $stmt->fetchAll(
-            PDO::FETCH_ASSOC
-        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -331,9 +377,7 @@ class Pedido
             ':pedido_id' => $pedido_id
         ]);
 
-        return $stmt->fetch(
-            PDO::FETCH_ASSOC
-        );
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 

@@ -16,7 +16,7 @@ class AuthMiddleware {
             return false;
         }
 
-        // Revisa rol_id o rol sin generar warnings/notices
+        // Revisa rol_id
         $rolId = $_SESSION['usuario']['rol_id'] ?? null;
         $rol = $_SESSION['usuario']['rol'] ?? null;
 

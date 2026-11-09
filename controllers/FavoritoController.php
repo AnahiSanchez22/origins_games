@@ -1,3 +1,4 @@
+
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -25,7 +26,9 @@ class FavoritoController
     {
         $usuario_id = (int) $_SESSION['usuario']['id'];
 
-        $favoritos = $this->favoritoModel->obtenerPorUsuario($usuario_id);
+        $favoritos = $this->favoritoModel->obtenerPorUsuario(
+            $usuario_id
+        );
 
         $pageTitle = 'Mis Favoritos - Origins Games';
 
@@ -39,27 +42,23 @@ class FavoritoController
      */
     public function agregar()
     {
+        $this->verificarPost();
+
         $usuario_id = (int) $_SESSION['usuario']['id'];
+        $producto_id = $this->validarId($_POST['producto_id'] ?? null);
 
-        $producto_id = isset($_POST['producto_id'])
-            ? (int) $_POST['producto_id']
-            : 0;
-
-        if ($producto_id <= 0) {
-            header('Location: /origins_games/producto');
-            exit();
+        if ($producto_id === false) {
+            $this->redireccionar('/origins_games/producto');
         }
 
-        $resultado = $this->favoritoModel->agregar(
+        $this->favoritoModel->agregar(
             $usuario_id,
             $producto_id
         );
 
-        $referer = $_SERVER['HTTP_REFERER']
-            ?? '/origins_games/producto';
-
-        header('Location: ' . $referer);
-        exit();
+        $this->redireccionar(
+            $this->obtenerRutaRetorno('/origins_games/producto')
+        );
     }
 
     /**
@@ -67,15 +66,13 @@ class FavoritoController
      */
     public function eliminar()
     {
+        $this->verificarPost();
+
         $usuario_id = (int) $_SESSION['usuario']['id'];
+        $producto_id = $this->validarId($_POST['producto_id'] ?? null);
 
-        $producto_id = isset($_POST['producto_id'])
-            ? (int) $_POST['producto_id']
-            : 0;
-
-        if ($producto_id <= 0) {
-            header('Location: /origins_games/favoritos');
-            exit();
+        if ($producto_id === false) {
+            $this->redireccionar('/origins_games/favoritos');
         }
 
         $this->favoritoModel->eliminar(
@@ -83,10 +80,78 @@ class FavoritoController
             $producto_id
         );
 
-        $referer = $_SERVER['HTTP_REFERER']
-            ?? '/origins_games/favoritos';
+        $this->redireccionar(
+            $this->obtenerRutaRetorno('/origins_games/favoritos')
+        );
+    }
 
-        header('Location: ' . $referer);
+    /**
+     * Comprobar que la solicitud sea POST.
+     */
+    private function verificarPost()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redireccionar('/origins_games/favoritos');
+        }
+    }
+
+    /**
+     * Validar identificadores.
+     */
+    private function validarId($id)
+    {
+        if (
+            !is_scalar($id)
+            || filter_var($id, FILTER_VALIDATE_INT) === false
+        ) {
+            return false;
+        }
+
+        $id = (int) $id;
+
+        return $id > 0 ? $id : false;
+    }
+
+    /**
+     * Obtener una ruta de retorno segura dentro de la aplicación.
+     */
+    private function obtenerRutaRetorno($rutaPredeterminada)
+    {
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+
+        if ($referer === '') {
+            return $rutaPredeterminada;
+        }
+
+        $ruta = parse_url($referer);
+
+        if (
+            $ruta === false
+            || !isset($ruta['host'])
+            || !isset($_SERVER['HTTP_HOST'])
+            || strcasecmp($ruta['host'], $_SERVER['HTTP_HOST']) !== 0
+        ) {
+            return $rutaPredeterminada;
+        }
+
+        $path = $ruta['path'] ?? '';
+
+        if (
+            strpos($path, '/origins_games/') !== 0
+            || preg_match('/[\r\n]/', $path)
+        ) {
+            return $rutaPredeterminada;
+        }
+
+        return $path;
+    }
+
+    /**
+     * Redireccionar y finalizar la ejecución.
+     */
+    private function redireccionar($ruta)
+    {
+        header('Location: ' . $ruta);
         exit();
     }
 }

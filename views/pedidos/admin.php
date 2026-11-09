@@ -1,5 +1,4 @@
 
-
 <style>
     .pedidos-header {
         display: flex;
@@ -72,6 +71,7 @@
     .pedido-total {
         color: var(--cyan-accent);
         font-weight: 800;
+        white-space: nowrap;
     }
 
     .estado-badge {
@@ -211,15 +211,12 @@
                             <td>
 
                                 <span class="pedido-total">
-
-                                    $
-                                    <?= number_format(
+                                    $<?= number_format(
                                         (float) $pedido['total'],
                                         0,
                                         ',',
                                         '.'
-                                    ) ?>
-
+                                    ) ?> COP
                                 </span>
 
                             </td>
@@ -266,5 +263,3 @@
     <?php endif; ?>
 
 </div>
-
-

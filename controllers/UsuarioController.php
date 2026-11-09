@@ -1,3 +1,4 @@
+
 <?php
 
 require_once "models/Usuario.php";
@@ -19,9 +20,50 @@ class UsuarioController
     }
 
 
-    /* =========================================================
-       LISTAR USUARIOS
-       ========================================================= */
+    /*
+     * =========================================================
+     * VALIDAR QUE EL ROL EXISTA
+     * =========================================================
+     */
+
+    private function rolValido($rolId, $roles)
+    {
+        if ($rolId <= 0) {
+            return false;
+        }
+
+        foreach ($roles as $rol) {
+
+            if ((int) $rol['id'] === $rolId) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+
+    /*
+     * =========================================================
+     * VALIDAR CONTRASEÑA
+     * =========================================================
+     */
+
+    private function passwordValido($password)
+    {
+        return preg_match(
+            '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+            $password
+        ) === 1;
+    }
+
+
+    /*
+     * =========================================================
+     * LISTAR USUARIOS
+     * =========================================================
+     */
 
     public function index()
     {
@@ -35,9 +77,11 @@ class UsuarioController
     }
 
 
-    /* =========================================================
-       CREAR USUARIO
-       ========================================================= */
+    /*
+     * =========================================================
+     * CREAR USUARIO
+     * =========================================================
+     */
 
     public function create()
     {
@@ -52,31 +96,84 @@ class UsuarioController
             $email = trim($_POST['email'] ?? '');
             $password = trim($_POST['password'] ?? '');
 
-            $rol_id = intval($_POST['rol_id'] ?? 2);
+            $rolIdRecibido = filter_var(
+                $_POST['rol_id'] ?? 2,
+                FILTER_VALIDATE_INT
+            );
+
+            $rol_id = $rolIdRecibido !== false
+                ? $rolIdRecibido
+                : 0;
 
             $telefono = trim($_POST['telefono'] ?? '');
             $direccion = trim($_POST['direccion'] ?? '');
 
 
-            /* Validaciones */
+            /*
+             * VALIDAR CAMPOS OBLIGATORIOS
+             */
 
             if (
-                empty($nombre) ||
-                empty($email) ||
-                empty($password)
+                $nombre === '' ||
+                $email === '' ||
+                $password === ''
             ) {
 
                 $error = "Nombre, email y contraseña son obligatorios.";
 
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            }
+
+
+            /*
+             * VALIDAR CORREO
+             */
+
+            elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                 $error = "El correo electrónico no es válido.";
 
-            } elseif ($this->usuarioModel->findByEmail($email)) {
+            }
+
+
+            /*
+             * VALIDAR CONTRASEÑA
+             */
+
+            elseif (!$this->passwordValido($password)) {
+
+                $error =
+                    "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
+
+            }
+
+
+            /*
+             * VALIDAR ROL
+             */
+
+            elseif (!$this->rolValido($rol_id, $roles)) {
+
+                $error = "El rol seleccionado no es válido.";
+
+            }
+
+
+            /*
+             * COMPROBAR CORREO DUPLICADO
+             */
+
+            elseif ($this->usuarioModel->findByEmail($email)) {
 
                 $error = "El correo ya está registrado.";
 
-            } else {
+            }
+
+
+            /*
+             * GUARDAR USUARIO
+             */
+
+            else {
 
                 $resultado = $this->usuarioModel->create([
                     'rol_id' => $rol_id,
@@ -115,9 +212,11 @@ class UsuarioController
     }
 
 
-    /* =========================================================
-       EDITAR USUARIO
-       ========================================================= */
+    /*
+     * =========================================================
+     * EDITAR USUARIO
+     * =========================================================
+     */
 
     public function edit($id = null)
     {
@@ -127,10 +226,10 @@ class UsuarioController
          * /usuario/edit?id=6
          */
 
-        $id = intval($id);
+        $id = filter_var($id, FILTER_VALIDATE_INT);
 
 
-        if ($id <= 0) {
+        if ($id === false || $id === null || $id <= 0) {
 
             Flash::set(
                 "Usuario no válido.",
@@ -143,7 +242,9 @@ class UsuarioController
         }
 
 
-        /* Buscar usuario */
+        /*
+         * BUSCAR USUARIO
+         */
 
         $usuario = $this->usuarioModel->findById($id);
 
@@ -166,9 +267,11 @@ class UsuarioController
         $error = null;
 
 
-        /* =====================================================
-           PROCESAR FORMULARIO
-           ===================================================== */
+        /*
+         * =====================================================
+         * PROCESAR FORMULARIO
+         * =====================================================
+         */
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -177,99 +280,155 @@ class UsuarioController
 
             $password = trim($_POST['password'] ?? '');
 
-            $rol_id = intval($_POST['rol_id'] ?? 2);
+            $rolIdRecibido = filter_var(
+                $_POST['rol_id'] ?? 2,
+                FILTER_VALIDATE_INT
+            );
+
+            $rol_id = $rolIdRecibido !== false
+                ? $rolIdRecibido
+                : 0;
 
             $telefono = trim($_POST['telefono'] ?? '');
             $direccion = trim($_POST['direccion'] ?? '');
 
 
-            /* Validaciones */
+            /*
+             * VALIDAR NOMBRE
+             */
 
-            if (empty($nombre)) {
+            if ($nombre === '') {
 
                 $error = "El nombre es obligatorio.";
 
-            } elseif (empty($email)) {
+            }
+
+
+            /*
+             * VALIDAR CORREO
+             */
+
+            elseif ($email === '') {
 
                 $error = "El correo electrónico es obligatorio.";
 
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            }
+
+            elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                 $error = "El correo electrónico no es válido.";
 
-            } else {
+            }
 
-                /*
-                 * Comprobar que el email no pertenezca
-                 * a otro usuario.
-                 */
+
+            /*
+             * VALIDAR ROL
+             */
+
+            elseif (!$this->rolValido($rol_id, $roles)) {
+
+                $error = "El rol seleccionado no es válido.";
+
+            }
+
+
+            /*
+             * VALIDAR CONTRASEÑA
+             *
+             * Si está vacía, se conserva la anterior.
+             */
+
+            elseif (
+                $password !== '' &&
+                !$this->passwordValido($password)
+            ) {
+
+                $error =
+                    "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
+
+            }
+
+
+            /*
+             * COMPROBAR CORREO DUPLICADO
+             */
+
+            else {
 
                 $existing = $this->usuarioModel->findByEmail($email);
 
 
                 if (
                     $existing &&
-                    $existing['id'] != $id
+                    (int) $existing['id'] !== $id
                 ) {
 
                     $error = "El email ingresado ya pertenece a otro usuario.";
 
-                } else {
-
-                    $resultado = $this->usuarioModel->update(
-                        $id,
-                        [
-                            'rol_id' => $rol_id,
-                            'nombre' => $nombre,
-                            'email' => $email,
-                            'password' => $password,
-                            'telefono' => $telefono,
-                            'direccion' => $direccion
-                        ]
-                    );
+                }
+            }
 
 
-                    if ($resultado) {
+            /*
+             * GUARDAR CAMBIOS
+             */
 
-                        /*
-                         * Si el administrador está editando
-                         * su propio usuario, actualizamos también
-                         * los datos básicos de la sesión.
-                         */
+            if ($error === null) {
 
-                        if (
-                            isset($_SESSION['usuario']['id']) &&
-                            $_SESSION['usuario']['id'] == $id
-                        ) {
-
-                            $_SESSION['usuario']['nombre'] = $nombre;
-                            $_SESSION['usuario']['email'] = $email;
-                            $_SESSION['usuario']['rol_id'] = $rol_id;
-
-                        }
+                $resultado = $this->usuarioModel->update(
+                    $id,
+                    [
+                        'rol_id' => $rol_id,
+                        'nombre' => $nombre,
+                        'email' => $email,
+                        'password' => $password,
+                        'telefono' => $telefono,
+                        'direccion' => $direccion
+                    ]
+                );
 
 
-                        Flash::set(
-                            "Usuario actualizado correctamente.",
-                            "success"
-                        );
+                if ($resultado) {
 
-                        header("Location: /origins_games/usuario");
-                        exit();
+                    /*
+                     * Si el administrador está editando
+                     * su propio usuario, actualizar sesión.
+                     */
 
-                    } else {
+                    if (
+                        isset($_SESSION['usuario']['id']) &&
+                        (int) $_SESSION['usuario']['id'] === $id
+                    ) {
 
-                        $error = "No fue posible actualizar el usuario.";
+                        $_SESSION['usuario']['nombre'] = $nombre;
+                        $_SESSION['usuario']['email'] = $email;
+                        $_SESSION['usuario']['rol_id'] = $rol_id;
 
                     }
+
+
+                    Flash::set(
+                        "Usuario actualizado correctamente.",
+                        "success"
+                    );
+
+                    header("Location: /origins_games/usuario");
+                    exit();
+
+                } else {
+
+                    $error = "No fue posible actualizar el usuario.";
+
                 }
             }
         }
 
 
-        /* =====================================================
-           MOSTRAR FORMULARIO
-           ===================================================== */
+        /*
+         * =====================================================
+         * MOSTRAR FORMULARIO
+         * =====================================================
+         */
 
         $pageTitle = "Editar Usuario - Admin";
 
@@ -279,20 +438,22 @@ class UsuarioController
     }
 
 
-    /* =========================================================
-       ELIMINAR USUARIO
-       ========================================================= */
+    /*
+     * =========================================================
+     * ELIMINAR USUARIO
+     * =========================================================
+     */
 
     public function delete($id = null)
     {
-        $id = intval($id);
+        $id = filter_var($id, FILTER_VALIDATE_INT);
 
 
         /*
-         * No permitir ID inválido.
+         * NO PERMITIR ID INVÁLIDO
          */
 
-        if ($id <= 0) {
+        if ($id === false || $id === null || $id <= 0) {
 
             Flash::set(
                 "Usuario no válido.",
@@ -306,8 +467,7 @@ class UsuarioController
 
 
         /*
-         * No permitir que el administrador
-         * se elimine a sí mismo.
+         * NO PERMITIR AUTOELIMINACIÓN
          */
 
         if (
@@ -327,8 +487,7 @@ class UsuarioController
 
 
         /*
-         * Comprobar que el usuario exista
-         * antes de eliminarlo.
+         * COMPROBAR QUE EL USUARIO EXISTA
          */
 
         $usuario = $this->usuarioModel->findById($id);
@@ -365,7 +524,7 @@ class UsuarioController
 
 
         /*
-         * Regresar al listado.
+         * REGRESAR AL LISTADO
          */
 
         header("Location: /origins_games/usuario");

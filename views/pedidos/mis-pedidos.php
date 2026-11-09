@@ -1,3 +1,4 @@
+
 <?php
 /*
  * La vista recibe:
@@ -208,13 +209,14 @@
                             </span>
                         </td>
 
-                        <!-- Total -->
+                        <!-- Total en pesos colombianos -->
                         <td class="order-total">
-                            $
-                            <?= number_format(
+                            $<?= number_format(
                                 (float) $pedido['total'],
-                                2
-                            ) ?>
+                                0,
+                                ',',
+                                '.'
+                            ) ?> COP
                         </td>
 
                         <!-- Detalle -->
@@ -245,7 +247,7 @@
                     margin-bottom: 15px;
                 "
             >
-                📦
+                
             </div>
 
             <h3

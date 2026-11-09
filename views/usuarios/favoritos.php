@@ -154,9 +154,7 @@
         Mis Favoritos
     </h2>
 
-    <p class="favoritos-subtitle">
-        Productos que has guardado para consultar después.
-    </p>
+
 
 
     <?php if (!empty($favoritos)): ?>
@@ -241,8 +239,10 @@
                             $
                             <?= number_format(
                                 $favorito['precio'] ?? 0,
-                                2
-                            ) ?>
+                                0,
+                                ',',
+                                '.'
+                            ) ?> COP
                         </div>
 
 

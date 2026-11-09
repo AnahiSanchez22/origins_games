@@ -1,3 +1,4 @@
+
 <style>
 
     .dashboard-wrap {
@@ -6,11 +7,9 @@
         width: 100%;
     }
 
-
     .dashboard-title {
         margin-bottom: 24px;
     }
-
 
     .dashboard-title h2 {
         color: #fff;
@@ -18,16 +17,12 @@
         margin-bottom: 6px;
     }
 
-
     .dashboard-title p {
         color: var(--text-secondary);
         font-size: .9rem;
     }
 
-
-    /* =====================================================
-       TARJETAS PRINCIPALES
-       ===================================================== */
+    /* TARJETAS PRINCIPALES */
 
     .dashboard-cards {
         display: grid;
@@ -35,7 +30,6 @@
         gap: 18px;
         margin-bottom: 22px;
     }
-
 
     .dashboard-card {
         background: rgba(11, 19, 41, .82);
@@ -46,13 +40,11 @@
         transition: .2s ease;
     }
 
-
     .dashboard-card:hover {
         border-color: var(--cyan-accent);
         box-shadow: 0 0 18px var(--glow-cyan);
         transform: translateY(-2px);
     }
-
 
     .dashboard-card-label {
         color: var(--text-secondary);
@@ -62,32 +54,25 @@
         margin-bottom: 10px;
     }
 
-
     .dashboard-card-value {
         color: #fff;
         font-size: 1.45rem;
         font-weight: 800;
     }
 
-
     .dashboard-card-value.yellow {
         color: var(--yellow-accent);
     }
-
 
     .dashboard-card-value.cyan {
         color: var(--cyan-accent);
     }
 
-
     .dashboard-card-value.red {
         color: #f87171;
     }
 
-
-    /* =====================================================
-       GRÁFICAS
-       ===================================================== */
+    /* GRÁFICAS */
 
     .dashboard-charts {
         display: grid;
@@ -95,7 +80,6 @@
         gap: 20px;
         margin-bottom: 20px;
     }
-
 
     .dashboard-chart-panel {
         background: rgba(11, 19, 41, .78);
@@ -105,13 +89,11 @@
         box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
 
-
     .dashboard-chart-title {
         color: #fff;
         font-size: 1rem;
         margin-bottom: 20px;
     }
-
 
     /* GRÁFICA DE VENTAS */
 
@@ -125,7 +107,6 @@
         border-bottom: 1px solid var(--border-card);
     }
 
-
     .venta-bar-container {
         flex: 1;
         height: 100%;
@@ -136,7 +117,6 @@
         min-width: 0;
     }
 
-
     .venta-valor {
         color: var(--text-secondary);
         font-size: .68rem;
@@ -144,7 +124,6 @@
         text-align: center;
         min-height: 17px;
     }
-
 
     .venta-bar {
         width: 55%;
@@ -155,12 +134,10 @@
         transition: .2s ease;
     }
 
-
     .venta-bar:hover {
         filter: brightness(1.2);
         box-shadow: 0 0 18px var(--glow-cyan);
     }
-
 
     .venta-mes {
         color: var(--text-secondary);
@@ -168,7 +145,6 @@
         margin-top: 9px;
         text-align: center;
     }
-
 
     /* GRÁFICA DE ESTADOS */
 
@@ -178,7 +154,6 @@
         gap: 25px;
         min-height: 230px;
     }
-
 
     .estado-donut {
         width: 155px;
@@ -200,7 +175,6 @@
         );
     }
 
-
     .estado-donut-centro {
         width: 92px;
         height: 92px;
@@ -212,25 +186,21 @@
         justify-content: center;
     }
 
-
     .estado-donut-centro strong {
         color: #fff;
         font-size: 1.4rem;
     }
-
 
     .estado-donut-centro span {
         color: var(--text-secondary);
         font-size: .7rem;
     }
 
-
     .estado-leyenda {
         display: flex;
         flex-direction: column;
         gap: 11px;
     }
-
 
     .estado-leyenda-item {
         display: flex;
@@ -240,7 +210,6 @@
         font-size: .78rem;
     }
 
-
     .estado-punto {
         width: 10px;
         height: 10px;
@@ -248,32 +217,26 @@
         flex-shrink: 0;
     }
 
-
     .punto-pendiente {
         background: #fbbf24;
     }
-
 
     .punto-pagado {
         background: #34d399;
     }
 
-
     .punto-enviado {
         background: #38bdf8;
     }
-
 
     .punto-cancelado {
         background: #f87171;
     }
 
-
     .estado-leyenda-item strong {
         color: #fff;
         margin-left: auto;
     }
-
 
     /* PRODUCTOS MÁS VENDIDOS */
 
@@ -283,11 +246,9 @@
         gap: 17px;
     }
 
-
     .producto-chart-item {
         width: 100%;
     }
-
 
     .producto-chart-header {
         display: flex;
@@ -295,7 +256,6 @@
         gap: 10px;
         margin-bottom: 7px;
     }
-
 
     .producto-chart-nombre {
         color: #fff;
@@ -305,14 +265,12 @@
         white-space: nowrap;
     }
 
-
     .producto-chart-cantidad {
         color: var(--cyan-accent);
         font-size: .75rem;
         font-weight: 700;
         white-space: nowrap;
     }
-
 
     .producto-chart-fondo {
         width: 100%;
@@ -322,7 +280,6 @@
         overflow: hidden;
     }
 
-
     .producto-chart-barra {
         height: 100%;
         background: var(--yellow-accent);
@@ -330,10 +287,7 @@
         min-width: 4px;
     }
 
-
-    /* =====================================================
-       COLUMNAS
-       ===================================================== */
+    /* COLUMNAS */
 
     .dashboard-grid {
         display: grid;
@@ -341,10 +295,7 @@
         gap: 20px;
     }
 
-
-    /* =====================================================
-       PANELES
-       ===================================================== */
+    /* PANELES */
 
     .dashboard-panel {
         background: rgba(11, 19, 41, .78);
@@ -355,7 +306,6 @@
         margin-bottom: 20px;
     }
 
-
     .dashboard-panel h3 {
         padding: 18px 20px;
         color: #fff;
@@ -363,16 +313,12 @@
         border-bottom: 1px solid var(--border-card);
     }
 
-
-    /* =====================================================
-       TABLA
-       ===================================================== */
+    /* TABLA */
 
     .dashboard-table {
         width: 100%;
         border-collapse: collapse;
     }
-
 
     .dashboard-table th,
     .dashboard-table td {
@@ -382,7 +328,6 @@
         font-size: .84rem;
     }
 
-
     .dashboard-table th {
         color: var(--cyan-accent);
         font-size: .72rem;
@@ -390,20 +335,15 @@
         letter-spacing: .03em;
     }
 
-
     .dashboard-table td {
         color: var(--text-secondary);
     }
-
 
     .dashboard-table strong {
         color: #fff;
     }
 
-
-    /* =====================================================
-       ESTADOS
-       ===================================================== */
+    /* ESTADOS */
 
     .dashboard-statuses {
         display: grid;
@@ -412,14 +352,12 @@
         padding: 18px;
     }
 
-
     .dashboard-status {
         border: 1px solid var(--border-card);
         border-radius: 14px;
         padding: 15px;
         background: rgba(6,13,30,.65);
     }
-
 
     .dashboard-status span {
         display: block;
@@ -429,36 +367,28 @@
         margin-bottom: 5px;
     }
 
-
     .dashboard-status strong {
         color: #fff;
         font-size: 1.35rem;
     }
 
-
     .status-pendiente strong {
         color: #fbbf24;
     }
-
 
     .status-pagado strong {
         color: #34d399;
     }
 
-
     .status-enviado strong {
         color: #38bdf8;
     }
-
 
     .status-cancelado strong {
         color: #f87171;
     }
 
-
-    /* =====================================================
-       STOCK
-       ===================================================== */
+    /* STOCK */
 
     .stock-item {
         display: flex;
@@ -469,17 +399,14 @@
         border-bottom: 1px solid rgba(255,255,255,.05);
     }
 
-
     .stock-item:last-child {
         border-bottom: 0;
     }
-
 
     .stock-name {
         color: #fff;
         font-size: .84rem;
     }
-
 
     .stock-number {
         min-width: 44px;
@@ -493,10 +420,7 @@
         font-weight: 700;
     }
 
-
-    /* =====================================================
-       ENLACES
-       ===================================================== */
+    /* ENLACES */
 
     .dashboard-link {
         display: inline-block;
@@ -506,12 +430,10 @@
         font-weight: 700;
     }
 
-
     .dashboard-link:hover {
         color: #67e8f9 !important;
         text-shadow: 0 0 8px var(--glow-cyan);
     }
-
 
     .dashboard-empty {
         padding: 24px;
@@ -519,10 +441,7 @@
         text-align: center;
     }
 
-
-    /* =====================================================
-       RESPONSIVE
-       ===================================================== */
+    /* RESPONSIVE */
 
     @media (max-width: 950px) {
 
@@ -530,11 +449,9 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
-
         .dashboard-charts {
             grid-template-columns: 1fr;
         }
-
 
         .dashboard-grid {
             grid-template-columns: 1fr;
@@ -542,18 +459,15 @@
 
     }
 
-
     @media (max-width: 600px) {
 
         .dashboard-cards {
             grid-template-columns: 1fr;
         }
 
-
         .dashboard-statuses {
             grid-template-columns: 1fr;
         }
-
 
         .estado-chart {
             flex-direction: column;
@@ -561,11 +475,9 @@
             padding: 20px;
         }
 
-
         .estado-leyenda {
             width: 100%;
         }
-
 
         .ventas-chart {
             height: 200px;
@@ -578,9 +490,7 @@
 
 <div class="dashboard-wrap">
 
-    <!-- =====================================================
-         TÍTULO
-         ===================================================== -->
+    <!-- TÍTULO -->
 
     <div class="dashboard-title">
 
@@ -595,9 +505,7 @@
     </div>
 
 
-    <!-- =====================================================
-         TARJETAS PRINCIPALES
-         ===================================================== -->
+    <!-- TARJETAS PRINCIPALES -->
 
     <div class="dashboard-cards">
 
@@ -609,13 +517,12 @@
 
             <div class="dashboard-card-value yellow">
 
-                $
-                <?= number_format(
+                $<?= number_format(
                     (float) $resumen['ventas_totales'],
                     0,
                     ',',
                     '.'
-                ) ?>
+                ) ?> COP
 
             </div>
 
@@ -669,12 +576,9 @@
     </div>
 
 
-    <!-- =====================================================
-         GRÁFICAS
-         ===================================================== -->
+    <!-- GRÁFICAS -->
 
     <div class="dashboard-charts">
-
 
         <!-- VENTAS POR MES -->
 
@@ -705,13 +609,11 @@
 
                     <?php
 
-                    $ventas =
-                        (float) $venta['ventas'];
+                    $ventas = (float) $venta['ventas'];
 
                     if ($maxVentas > 0) {
 
-                        $altura =
-                            ($ventas / $maxVentas) * 100;
+                        $altura = ($ventas / $maxVentas) * 100;
 
                     } else {
 
@@ -724,13 +626,12 @@
 
                         <div class="venta-valor">
 
-                            $
-                            <?= number_format(
+                            $<?= number_format(
                                 $ventas,
                                 0,
                                 ',',
                                 '.'
-                            ) ?>
+                            ) ?> COP
 
                         </div>
 
@@ -775,27 +676,23 @@
 
             <?php
 
-            $totalEstados =
-                array_sum($pedidosEstado);
+            $totalEstados = array_sum($pedidosEstado);
 
             if ($totalEstados > 0) {
 
                 $pendienteDeg =
-                    ($pedidosEstado['pendiente'] /
-                    $totalEstados) * 360;
+                    ($pedidosEstado['pendiente'] / $totalEstados) * 360;
 
                 $pagadoDeg =
                     $pendienteDeg +
                     (
-                        $pedidosEstado['pagado'] /
-                        $totalEstados
+                        $pedidosEstado['pagado'] / $totalEstados
                     ) * 360;
 
                 $enviadoDeg =
                     $pagadoDeg +
                     (
-                        $pedidosEstado['enviado'] /
-                        $totalEstados
+                        $pedidosEstado['enviado'] / $totalEstados
                     ) * 360;
 
             } else {
@@ -809,7 +706,6 @@
 
 
             <div class="estado-chart">
-
 
                 <?php if ($totalEstados > 0): ?>
 
@@ -870,12 +766,9 @@
 
                 <div class="estado-leyenda">
 
-
                     <div class="estado-leyenda-item">
 
-                        <span
-                            class="estado-punto punto-pendiente"
-                        ></span>
+                        <span class="estado-punto punto-pendiente"></span>
 
                         Pendientes
 
@@ -888,9 +781,7 @@
 
                     <div class="estado-leyenda-item">
 
-                        <span
-                            class="estado-punto punto-pagado"
-                        ></span>
+                        <span class="estado-punto punto-pagado"></span>
 
                         Pagados
 
@@ -903,9 +794,7 @@
 
                     <div class="estado-leyenda-item">
 
-                        <span
-                            class="estado-punto punto-enviado"
-                        ></span>
+                        <span class="estado-punto punto-enviado"></span>
 
                         Enviados
 
@@ -918,9 +807,7 @@
 
                     <div class="estado-leyenda-item">
 
-                        <span
-                            class="estado-punto punto-cancelado"
-                        ></span>
+                        <span class="estado-punto punto-cancelado"></span>
 
                         Cancelados
 
@@ -939,9 +826,7 @@
     </div>
 
 
-    <!-- =====================================================
-         PRODUCTOS MÁS VENDIDOS
-         ===================================================== -->
+    <!-- PRODUCTOS MÁS VENDIDOS -->
 
     <div class="dashboard-panel">
 
@@ -958,8 +843,7 @@
 
             foreach ($productosMasVendidos as $producto) {
 
-                $cantidad =
-                    (int) $producto['unidades_vendidas'];
+                $cantidad = (int) $producto['unidades_vendidas'];
 
                 if ($cantidad > $maxVendidos) {
                     $maxVendidos = $cantidad;
@@ -978,13 +862,11 @@
 
                     <?php
 
-                    $cantidad =
-                        (int) $producto['unidades_vendidas'];
+                    $cantidad = (int) $producto['unidades_vendidas'];
 
                     if ($maxVendidos > 0) {
 
-                        $ancho =
-                            ($cantidad / $maxVendidos) * 100;
+                        $ancho = ($cantidad / $maxVendidos) * 100;
 
                     } else {
 
@@ -1011,11 +893,10 @@
                             </span>
 
 
-                            <span
-                                class="producto-chart-cantidad"
-                            >
+                            <span class="producto-chart-cantidad">
 
                                 <?= $cantidad ?>
+
                                 <?= $cantidad === 1
                                     ? 'unidad'
                                     : 'unidades'
@@ -1030,9 +911,7 @@
 
                             <div
                                 class="producto-chart-barra"
-                                style="
-                                    width: <?= $ancho ?>%;
-                                "
+                                style="width: <?= $ancho ?>%;"
                             ></div>
 
                         </div>
@@ -1056,17 +935,13 @@
     </div>
 
 
-    <!-- =====================================================
-         CONTENIDO EXISTENTE
-         ===================================================== -->
+    <!-- CONTENIDO EXISTENTE -->
 
     <div class="dashboard-grid">
-
 
         <!-- COLUMNA IZQUIERDA -->
 
         <div>
-
 
             <!-- PEDIDOS RECIENTES -->
 
@@ -1087,21 +962,13 @@
 
                                 <tr>
 
-                                    <th>
-                                        Pedido
-                                    </th>
+                                    <th>Pedido</th>
 
-                                    <th>
-                                        Cliente
-                                    </th>
+                                    <th>Cliente</th>
 
-                                    <th>
-                                        Estado
-                                    </th>
+                                    <th>Estado</th>
 
-                                    <th>
-                                        Total
-                                    </th>
+                                    <th>Total</th>
 
                                 </tr>
 
@@ -1129,9 +996,7 @@
                                         <td>
 
                                             <?= htmlspecialchars(
-                                                $pedido[
-                                                    'usuario_nombre'
-                                                ]
+                                                $pedido['usuario_nombre']
                                             ) ?>
 
                                         </td>
@@ -1140,9 +1005,7 @@
                                         <td>
 
                                             <?= htmlspecialchars(
-                                                ucfirst(
-                                                    $pedido['estado']
-                                                )
+                                                ucfirst($pedido['estado'])
                                             ) ?>
 
                                         </td>
@@ -1150,15 +1013,12 @@
 
                                         <td>
 
-                                            $
-
-                                            <?= number_format(
-                                                (float)
-                                                $pedido['total'],
+                                            $<?= number_format(
+                                                (float) $pedido['total'],
                                                 0,
                                                 ',',
                                                 '.'
-                                            ) ?>
+                                            ) ?> COP
 
                                         </td>
 
@@ -1257,7 +1117,6 @@
 
         <div>
 
-
             <!-- ESTADOS -->
 
             <div class="dashboard-panel">
@@ -1269,78 +1128,53 @@
 
                 <div class="dashboard-statuses">
 
-
-                    <div
-                        class="
-                            dashboard-status
-                            status-pendiente
-                        "
-                    >
+                    <div class="dashboard-status status-pendiente">
 
                         <span>
                             Pendientes
                         </span>
 
                         <strong>
-                            <?= (int)
-                                $pedidosEstado['pendiente'] ?>
+                            <?= (int) $pedidosEstado['pendiente'] ?>
                         </strong>
 
                     </div>
 
 
-                    <div
-                        class="
-                            dashboard-status
-                            status-pagado
-                        "
-                    >
+                    <div class="dashboard-status status-pagado">
 
                         <span>
                             Pagados
                         </span>
 
                         <strong>
-                            <?= (int)
-                                $pedidosEstado['pagado'] ?>
+                            <?= (int) $pedidosEstado['pagado'] ?>
                         </strong>
 
                     </div>
 
 
-                    <div
-                        class="
-                            dashboard-status
-                            status-enviado
-                        "
-                    >
+                    <div class="dashboard-status status-enviado">
 
                         <span>
                             Enviados
                         </span>
 
                         <strong>
-                            <?= (int)
-                                $pedidosEstado['enviado'] ?>
+                            <?= (int) $pedidosEstado['enviado'] ?>
                         </strong>
 
                     </div>
 
 
-                    <div
-                        class="
-                            dashboard-status
-                            status-cancelado
-                        "
-                    >
+                    <div class="dashboard-status status-cancelado">
 
                         <span>
                             Cancelados
                         </span>
 
                         <strong>
-                            <?= (int)
-                                $pedidosEstado['cancelado'] ?>
+                            <?= (int) $pedidosEstado['cancelado'] ?>
                         </strong>
 
                     </div>
@@ -1366,8 +1200,7 @@
                     </span>
 
                     <strong>
-                        <?= (int)
-                            $resumen['total_productos'] ?>
+                        <?= (int) $resumen['total_productos'] ?>
                     </strong>
 
                 </div>
@@ -1380,8 +1213,7 @@
                     </span>
 
                     <strong>
-                        <?= (int)
-                            $resumen['productos_stock_bajo'] ?>
+                        <?= (int) $resumen['productos_stock_bajo'] ?>
                     </strong>
 
                 </div>

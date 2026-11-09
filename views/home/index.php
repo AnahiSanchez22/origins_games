@@ -149,12 +149,17 @@
                             font-weight: bold;
                             color: var(--cyan-accent);
                             margin-bottom: 12px;
+                            white-space: nowrap;
+                            display: block;
+                            text-align: center;
                         "
                     >
                         $<?= number_format(
                             (float)($p['precio'] ?? 0),
-                            2
-                        ) ?>
+                            0,
+                            ',',
+                            '.'
+                        ) ?> COP
                     </div>
 
 
@@ -712,7 +717,6 @@
 
 <!-- =========================================
      QUIÉNES SOMOS
-     Al final de la página principal
      ========================================= -->
 
 <style>

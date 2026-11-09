@@ -1,3 +1,4 @@
+
 <?php
 
 $estado = strtolower(trim($pedido['estado'] ?? ''));
@@ -412,20 +413,22 @@ if ($estado === 'pendiente') {
 
 
                             <td class="price">
-                                $
-                                <?= number_format(
+                                $<?= number_format(
                                     $precioUnitario,
-                                    2
-                                ) ?>
+                                    0,
+                                    ',',
+                                    '.'
+                                ) ?> COP
                             </td>
 
 
                             <td class="price">
-                                $
-                                <?= number_format(
+                                $<?= number_format(
                                     $subtotal,
-                                    2
-                                ) ?>
+                                    0,
+                                    ',',
+                                    '.'
+                                ) ?> COP
                             </td>
 
                         </tr>
@@ -464,11 +467,12 @@ if ($estado === 'pendiente') {
         </span>
 
         <strong>
-            $
-            <?= number_format(
+            $<?= number_format(
                 (float)($pedido['total'] ?? 0),
-                2
-            ) ?>
+                0,
+                ',',
+                '.'
+            ) ?> COP
         </strong>
 
     </div>

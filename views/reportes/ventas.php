@@ -1,4 +1,6 @@
+
 <?php
+
 $fechaInicio = $fechaInicio ?? '';
 $fechaFin = $fechaFin ?? '';
 
@@ -8,9 +10,29 @@ $totalUnidades = (int) ($resumen['total_unidades'] ?? 0);
 
 $ventas = $ventas ?? [];
 $productosVendidos = $productosVendidos ?? [];
+
+// Conservar los filtros seleccionados para el PDF.
+$parametrosPdf = [];
+
+if ($fechaInicio !== '') {
+    $parametrosPdf['fecha_inicio'] = $fechaInicio;
+}
+
+if ($fechaFin !== '') {
+    $parametrosPdf['fecha_fin'] = $fechaFin;
+}
+
+// Dirección de descarga del PDF.
+$urlExportarPdf = '/origins_games/reporte-ventas/pdf';
+
+if (!empty($parametrosPdf)) {
+    $urlExportarPdf .= '?' . http_build_query($parametrosPdf);
+}
+
 ?>
 
 <style>
+
     .reporte-container {
         max-width: 1200px;
         margin: 0 auto;
@@ -235,6 +257,7 @@ $productosVendidos = $productosVendidos ?? [];
     .total-venta {
         color: #34d399 !important;
         font-weight: 900;
+        white-space: nowrap;
     }
 
     .cantidad-producto {
@@ -255,6 +278,7 @@ $productosVendidos = $productosVendidos ?? [];
     }
 
     @media (max-width: 850px) {
+
         .filtros-form {
             grid-template-columns: 1fr 1fr;
         }
@@ -262,9 +286,11 @@ $productosVendidos = $productosVendidos ?? [];
         .resumen-grid {
             grid-template-columns: 1fr;
         }
+
     }
 
     @media (max-width: 550px) {
+
         .reporte-container {
             padding: 15px;
         }
@@ -276,34 +302,50 @@ $productosVendidos = $productosVendidos ?? [];
         .reporte-header h1 {
             font-size: 1.6rem;
         }
+
     }
+
 </style>
 
 <div class="reporte-container">
 
     <div class="reporte-header">
+
         <h1>Reporte de Ventas</h1>
+
         <p>Consultar y analizar ventas</p>
 
         <?php if (!empty($fechaInicio) || !empty($fechaFin)): ?>
+
             <div class="rango-activo">
+
                 <?php if (!empty($fechaInicio) && !empty($fechaFin)): ?>
+
                     Mostrando resultados desde
                     <strong><?= htmlspecialchars($fechaInicio) ?></strong>
                     hasta
                     <strong><?= htmlspecialchars($fechaFin) ?></strong>.
+
                 <?php elseif (!empty($fechaInicio)): ?>
+
                     Mostrando resultados desde
                     <strong><?= htmlspecialchars($fechaInicio) ?></strong>.
+
                 <?php elseif (!empty($fechaFin)): ?>
+
                     Mostrando resultados hasta
                     <strong><?= htmlspecialchars($fechaFin) ?></strong>.
+
                 <?php endif; ?>
+
             </div>
+
         <?php endif; ?>
+
     </div>
 
     <!-- FILTROS -->
+
     <div class="filtros-card">
 
         <form
@@ -313,7 +355,10 @@ $productosVendidos = $productosVendidos ?? [];
         >
 
             <div class="campo-filtro">
-                <label for="fecha_inicio">Fecha inicial</label>
+
+                <label for="fecha_inicio">
+                    Fecha inicial
+                </label>
 
                 <input
                     type="date"
@@ -321,10 +366,14 @@ $productosVendidos = $productosVendidos ?? [];
                     name="fecha_inicio"
                     value="<?= htmlspecialchars($fechaInicio) ?>"
                 >
+
             </div>
 
             <div class="campo-filtro">
-                <label for="fecha_fin">Fecha final</label>
+
+                <label for="fecha_fin">
+                    Fecha final
+                </label>
 
                 <input
                     type="date"
@@ -332,6 +381,7 @@ $productosVendidos = $productosVendidos ?? [];
                     name="fecha_fin"
                     value="<?= htmlspecialchars($fechaFin) ?>"
                 >
+
             </div>
 
             <button type="submit" class="btn-reporte">
@@ -347,22 +397,38 @@ $productosVendidos = $productosVendidos ?? [];
 
         </form>
 
+        <div style="display:flex; justify-content:flex-end; margin-top:15px;">
+
+            <a
+                href="<?= htmlspecialchars($urlExportarPdf, ENT_QUOTES, 'UTF-8') ?>"
+                class="btn-reporte"
+                style="background:transparent; color:var(--yellow-accent);"
+            >
+                Descargar reporte PDF
+            </a>
+
+        </div>
+
     </div>
 
     <!-- RESUMEN -->
+
     <div class="resumen-grid">
 
         <div class="resumen-card ventas">
+
             <div class="resumen-label">
                 Ventas Totales
             </div>
 
             <div class="resumen-valor">
-                $<?= number_format($totalVentas, 0, ',', '.') ?>
+                $<?= number_format($totalVentas, 0, ',', '.') ?> COP
             </div>
+
         </div>
 
         <div class="resumen-card pedidos">
+
             <div class="resumen-label">
                 Pedidos
             </div>
@@ -370,9 +436,11 @@ $productosVendidos = $productosVendidos ?? [];
             <div class="resumen-valor">
                 <?= number_format($totalPedidos, 0, ',', '.') ?>
             </div>
+
         </div>
 
         <div class="resumen-card unidades">
+
             <div class="resumen-label">
                 Unidades Vendidas
             </div>
@@ -380,11 +448,13 @@ $productosVendidos = $productosVendidos ?? [];
             <div class="resumen-valor">
                 <?= number_format($totalUnidades, 0, ',', '.') ?>
             </div>
+
         </div>
 
     </div>
 
     <!-- VENTAS -->
+
     <section class="seccion-reporte">
 
         <h2 class="seccion-titulo">
@@ -392,11 +462,13 @@ $productosVendidos = $productosVendidos ?? [];
         </h2>
 
         <div class="tabla-card">
+
             <div class="tabla-scroll">
 
                 <table class="reporte-table">
 
                     <thead>
+
                         <tr>
                             <th>Pedido</th>
                             <th>Fecha</th>
@@ -405,6 +477,7 @@ $productosVendidos = $productosVendidos ?? [];
                             <th>Estado</th>
                             <th>Total</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -414,11 +487,13 @@ $productosVendidos = $productosVendidos ?? [];
                             <?php foreach ($ventas as $venta): ?>
 
                                 <?php
+
                                 $estado = strtolower(
                                     trim($venta['estado'] ?? '')
                                 );
 
                                 $claseEstado = 'estado-' . $estado;
+
                                 ?>
 
                                 <tr>
@@ -446,9 +521,11 @@ $productosVendidos = $productosVendidos ?? [];
                                     </td>
 
                                     <td>
+
                                         <span class="estado <?= htmlspecialchars($claseEstado) ?>">
                                             <?= htmlspecialchars($estado) ?>
                                         </span>
+
                                     </td>
 
                                     <td class="total-venta">
@@ -457,7 +534,7 @@ $productosVendidos = $productosVendidos ?? [];
                                             0,
                                             ',',
                                             '.'
-                                        ) ?>
+                                        ) ?> COP
                                     </td>
 
                                 </tr>
@@ -467,12 +544,16 @@ $productosVendidos = $productosVendidos ?? [];
                         <?php else: ?>
 
                             <tr>
+
                                 <td colspan="6">
+
                                     <div class="sin-registros">
                                         No hay ventas registradas
                                         para el período seleccionado.
                                     </div>
+
                                 </td>
+
                             </tr>
 
                         <?php endif; ?>
@@ -482,11 +563,13 @@ $productosVendidos = $productosVendidos ?? [];
                 </table>
 
             </div>
+
         </div>
 
     </section>
 
     <!-- PRODUCTOS VENDIDOS -->
+
     <section class="seccion-reporte">
 
         <h2 class="seccion-titulo">
@@ -494,16 +577,19 @@ $productosVendidos = $productosVendidos ?? [];
         </h2>
 
         <div class="tabla-card">
+
             <div class="tabla-scroll">
 
                 <table class="reporte-table">
 
                     <thead>
+
                         <tr>
                             <th>Producto</th>
                             <th>Unidades Vendidas</th>
                             <th>Total Vendido</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -535,7 +621,7 @@ $productosVendidos = $productosVendidos ?? [];
                                             0,
                                             ',',
                                             '.'
-                                        ) ?>
+                                        ) ?> COP
                                     </td>
 
                                 </tr>
@@ -545,12 +631,16 @@ $productosVendidos = $productosVendidos ?? [];
                         <?php else: ?>
 
                             <tr>
+
                                 <td colspan="3">
+
                                     <div class="sin-registros">
                                         No hay productos vendidos
                                         para el período seleccionado.
                                     </div>
+
                                 </td>
+
                             </tr>
 
                         <?php endif; ?>
@@ -560,6 +650,7 @@ $productosVendidos = $productosVendidos ?? [];
                 </table>
 
             </div>
+
         </div>
 
     </section>

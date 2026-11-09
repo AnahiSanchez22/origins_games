@@ -1,3 +1,4 @@
+
 <?php
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -125,6 +126,30 @@ class PerfilController
 
                     $error =
                         "El correo electrónico ya está en uso por otro usuario.";
+
+                }
+
+            }
+
+
+            /*
+             * Validar nueva contraseña
+             *
+             * Si el campo está vacío, se conserva
+             * la contraseña actual.
+             */
+
+            if ($error === null && $password !== '') {
+
+                if (
+                    !preg_match(
+                        '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/',
+                        $password
+                    )
+                ) {
+
+                    $error =
+                        "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula y un número.";
 
                 }
 

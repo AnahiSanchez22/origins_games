@@ -1,3 +1,4 @@
+
 <?php
 // Esta vista es cargada desde PedidoController.
 ?>
@@ -271,13 +272,12 @@
                                 Cantidad:
                                 <?= $cantidad ?>
                                 ×
-                                $
-                                <?= number_format(
+                                $<?= number_format(
                                     $precio,
                                     0,
                                     ',',
                                     '.'
-                                ) ?>
+                                ) ?> COP
                             </span>
 
                         </div>
@@ -285,13 +285,12 @@
 
                         <div class="producto-subtotal">
 
-                            $
-                            <?= number_format(
+                            $<?= number_format(
                                 $subtotal,
                                 0,
                                 ',',
                                 '.'
-                            ) ?>
+                            ) ?> COP
 
                         </div>
 
@@ -315,13 +314,12 @@
                 </span>
 
                 <strong>
-                    $
-                    <?= number_format(
+                    $<?= number_format(
                         (float) ($pedido['total'] ?? 0),
                         0,
                         ',',
                         '.'
-                    ) ?>
+                    ) ?> COP
                 </strong>
 
             </div>
